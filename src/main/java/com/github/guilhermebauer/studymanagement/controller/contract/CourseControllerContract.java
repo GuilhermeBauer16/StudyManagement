@@ -20,11 +20,12 @@ public interface CourseControllerContract {
     ResponseEntity<CourseResponse>  update(@RequestBody CourseVO courseVO) throws NoSuchFieldException, IllegalAccessException;
 
     @GetMapping(value = "/{id}")
-    ResponseEntity<CourseResponse>  findById(@PathVariable("id") String id) throws NoSuchFieldException, IllegalAccessException;
+    ResponseEntity<CourseResponse> findById(@PathVariable("id") String id) throws NoSuchFieldException, IllegalAccessException;
 
     @GetMapping(value = "findByTitle/{title}")
     ResponseEntity<Page<CourseResponse>> findCourseByTitle(@PathVariable("title")String title,Pageable pageable) throws NoSuchFieldException, IllegalAccessException;
 
+    @GetMapping
     ResponseEntity<Page<CourseResponse>> findAll(final Pageable pageable) throws NoSuchFieldException, IllegalAccessException;
     @DeleteMapping(value = "/{id}")
     ResponseEntity<Void> delete(@PathVariable("id") String id);

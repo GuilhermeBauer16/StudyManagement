@@ -4,6 +4,7 @@ import com.github.guilhermebauer.studymanagement.exception.CourseNotFoundExcepti
 import com.github.guilhermebauer.studymanagement.model.CourseEntity;
 import com.github.guilhermebauer.studymanagement.model.values.CourseVO;
 import com.github.guilhermebauer.studymanagement.repository.CourseRepository;
+
 import com.github.guilhermebauer.studymanagement.response.CourseResponse;
 import com.github.guilhermebauer.studymanagement.utils.ValidatorUtils;
 import org.junit.jupiter.api.BeforeEach;
