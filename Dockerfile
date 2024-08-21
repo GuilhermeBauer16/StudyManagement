@@ -1,0 +1,23 @@
+FROM openjdk:21-jdk-slim
+
+ARG DB_NAME
+ARG DB_USERNAME
+ARG DB_PASSWORD
+ARG DB_PORT
+ARG EXPOSE_PORT
+ARG CONTAINER_PORT
+
+ENV DB_NAME=${DB_NAME} \
+    DB_USERNAME=${DB_USERNAME} \
+    DB_PASSWORD=${DB_PASSWORD} \
+    DB_PORT=${DB_PORT} \
+    EXPOSE_PORT=${EXPOSE_PORT} \
+    CONTAINER_PORT=${CONTAINER_PORT}
+
+WORKDIR /app
+
+COPY target/*.jar /app/studymanagement.jar
+
+EXPOSE ${EXPOSE_PORT}
+
+ENTRYPOINT ["java", "-jar", "studymanagement.jar"]
