@@ -4,6 +4,8 @@ package com.github.guilhermebauer.studymanagement.handler;
 import com.github.guilhermebauer.studymanagement.exception.CourseNotFoundException;
 import com.github.guilhermebauer.studymanagement.exception.ExceptionResponse;
 import com.github.guilhermebauer.studymanagement.exception.FieldNotFound;
+import com.github.guilhermebauer.studymanagement.exception.LinkNotFoundException;
+import com.github.guilhermebauer.studymanagement.exception.StudyMaterialNotFoundException;
 import com.github.guilhermebauer.studymanagement.exception.UuidUtilsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +22,9 @@ public class CustomizedResponseEntityExceptionHandler {
 
     @ExceptionHandler({
             FieldNotFound.class,
-            CourseNotFoundException.class
+            CourseNotFoundException.class,
+            StudyMaterialNotFoundException.class,
+            LinkNotFoundException.class
 
     })
     public final ResponseEntity<ExceptionResponse> handlerNotFoundException(

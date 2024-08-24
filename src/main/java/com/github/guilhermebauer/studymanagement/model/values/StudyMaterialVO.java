@@ -1,52 +1,28 @@
-package com.github.guilhermebauer.studymanagement.model;
+package com.github.guilhermebauer.studymanagement.model.values;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
+import com.github.guilhermebauer.studymanagement.model.CourseEntity;
+import com.github.guilhermebauer.studymanagement.model.LinkEntity;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.ALL;
-import static jakarta.persistence.CascadeType.PERSIST;
-import static jakarta.persistence.CascadeType.REMOVE;
+public class StudyMaterialVO {
 
-@Entity
-@Table(name = "study_materials")
-public class StudyMaterialEntity {
-
-    @Id
     private String id;
     private String title;
     private String content;
-    @ManyToOne
-    @JoinColumn(name = "course_id")
     private CourseEntity courseEntity;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {ALL})
-    @JoinTable(
-            name = "study_materials_links",
-            joinColumns = @JoinColumn(name = "study_material_id"),
-            inverseJoinColumns = @JoinColumn(name = "link_id")
-    )
     private List<LinkEntity> links;
 
-    public StudyMaterialEntity() {
+    public StudyMaterialVO() {
     }
 
 
-    public StudyMaterialEntity(String id, String title, String content, CourseEntity courseEntity, List<LinkEntity> links) {
+    public StudyMaterialVO(String id, String title, String content, CourseEntity courseEntity, List<LinkEntity> links) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.courseEntity = courseEntity;
         this.links = links;
     }
-
 
 
     public String getId() {
