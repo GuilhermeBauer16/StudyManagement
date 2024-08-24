@@ -31,7 +31,8 @@ public interface StudyMaterialControllerContract {
     @PostMapping(value = "/addLinks")
     ResponseEntity<StudyMaterialVO> addLinkInStudyMaterial(@RequestBody LinkListToStudyMaterialRequest request) throws IllegalAccessException, NoSuchFieldException;
 
-    ResponseEntity<StudyMaterialVO> updateLinkInStudyMaterial(StudyMaterialVO studyMaterialVO);
+    @PutMapping(value = "/updateLink")
+    ResponseEntity<StudyMaterialVO> updateLinkInStudyMaterial(@RequestBody SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException;
 
     @DeleteMapping(value = "/deleteLinks")
     ResponseEntity<StudyMaterialVO> deleteLinkInStudyMaterial(@RequestBody SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException;

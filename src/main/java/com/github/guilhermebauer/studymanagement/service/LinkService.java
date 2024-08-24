@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,25 +47,26 @@ public class LinkService implements LinkServiceContract {
     }
 
     @Override
-    public LinkVO update(com.github.guilhermebauer.studymanagement.model.values.LinkVO linkVO) throws NoSuchFieldException, IllegalAccessException {
+    @Transactional
+    public LinkVO update(LinkVO linkVO) throws NoSuchFieldException, IllegalAccessException {
 
         LinkEntity linkEntity = repository.findById(linkVO.getId()).orElseThrow(() -> new LinkNotFoundException(LINK_NOT_FOUND));
         LinkEntity updatedLinkEntity = ValidatorUtils.updateFieldIfNotNull(linkEntity, linkVO, LINK_NOT_FOUND, LinkNotFoundException.class);
         ValidatorUtils.checkFieldNotNullAndNotEmptyOrThrowException(linkEntity,LINK_NOT_FOUND, FieldNotFound.class);
         LinkEntity savedLinkEntity = repository.save(updatedLinkEntity);
 
-        return BuildMapper.parseObject(new com.github.guilhermebauer.studymanagement.model.values.LinkVO(), savedLinkEntity);
+        return BuildMapper.parseObject(new LinkVO(), savedLinkEntity);
     }
 
     @Override
     public LinkVO findLinkById(String id) throws NoSuchFieldException, IllegalAccessException {
 
         LinkEntity linkEntity = repository.findById(id).orElseThrow(() -> new LinkNotFoundException(LINK_NOT_FOUND));
-        return BuildMapper.parseObject(new com.github.guilhermebauer.studymanagement.model.values.LinkVO(), linkEntity);
+        return BuildMapper.parseObject(new LinkVO(), linkEntity);
     }
 
     @Override
-    public Page<com.github.guilhermebauer.studymanagement.model.values.LinkVO> findAllLinks(Pageable pageable) {
+    public Page<LinkVO> findAllLinks(Pageable pageable) {
         return null;
     }
 

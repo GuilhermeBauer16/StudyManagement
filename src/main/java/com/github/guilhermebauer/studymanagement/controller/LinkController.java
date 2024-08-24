@@ -2,6 +2,7 @@ package com.github.guilhermebauer.studymanagement.controller;
 
 import com.github.guilhermebauer.studymanagement.controller.contract.LinkControllerContract;
 import com.github.guilhermebauer.studymanagement.model.LinkEntity;
+import com.github.guilhermebauer.studymanagement.model.values.LinkVO;
 import com.github.guilhermebauer.studymanagement.service.LinkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,20 +30,20 @@ public class LinkController implements LinkControllerContract {
     }
 
     @Override
-    public ResponseEntity<com.github.guilhermebauer.studymanagement.model.values.LinkVO> update(com.github.guilhermebauer.studymanagement.model.values.LinkVO linkVO) throws NoSuchFieldException, IllegalAccessException {
+    public ResponseEntity<LinkVO> update(LinkVO linkVO) throws NoSuchFieldException, IllegalAccessException {
         com.github.guilhermebauer.studymanagement.model.values.LinkVO update = service.update(linkVO);
         return ResponseEntity.ok(update);
     }
 
     @Override
-    public ResponseEntity<com.github.guilhermebauer.studymanagement.model.values.LinkVO> findLinkById(String id) throws NoSuchFieldException, IllegalAccessException {
+    public ResponseEntity<LinkVO> findLinkById(String id) throws NoSuchFieldException, IllegalAccessException {
 
         com.github.guilhermebauer.studymanagement.model.values.LinkVO linkById = service.findLinkById(id);
         return ResponseEntity.ok(linkById);
     }
 
     @Override
-    public ResponseEntity<Page<com.github.guilhermebauer.studymanagement.model.values.LinkVO>> findAllLinks(Pageable pageable) {
+    public ResponseEntity<Page<LinkVO>> findAllLinks(Pageable pageable) {
         return null;
     }
 

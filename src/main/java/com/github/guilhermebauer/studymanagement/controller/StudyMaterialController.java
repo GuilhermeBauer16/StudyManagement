@@ -61,8 +61,9 @@ public class StudyMaterialController implements StudyMaterialControllerContract 
     }
 
     @Override
-    public ResponseEntity<StudyMaterialVO> updateLinkInStudyMaterial(StudyMaterialVO studyMaterialVO) {
-        return null;
+    public ResponseEntity<StudyMaterialVO> updateLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException {
+        StudyMaterialVO updatedLink = service.updateLinkInStudyMaterial(request);
+        return ResponseEntity.ok(updatedLink);
     }
 
     @Override

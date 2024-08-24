@@ -12,8 +12,6 @@ import jakarta.persistence.Table;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.ALL;
-import static jakarta.persistence.CascadeType.PERSIST;
-import static jakarta.persistence.CascadeType.REMOVE;
 
 @Entity
 @Table(name = "study_materials")

@@ -20,7 +20,7 @@ public interface StudyMaterialServiceContract {
 
     StudyMaterialVO addLinkInStudyMaterial(LinkListToStudyMaterialRequest request) throws IllegalAccessException, NoSuchFieldException;
 
-    StudyMaterialVO updateLinkInStudyMaterial(StudyMaterialVO studyMaterialVO);
+    StudyMaterialVO updateLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException;
 
     @Transactional
     StudyMaterialVO deleteLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException;
