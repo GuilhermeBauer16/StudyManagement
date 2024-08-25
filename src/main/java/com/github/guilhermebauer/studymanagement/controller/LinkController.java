@@ -43,8 +43,9 @@ public class LinkController implements LinkControllerContract {
     }
 
     @Override
-    public ResponseEntity<Page<LinkVO>> findAllLinks(Pageable pageable) {
-        return null;
+    public ResponseEntity<Page<LinkVO>> findAllLinks(Pageable pageable) throws NoSuchFieldException, IllegalAccessException {
+        Page<LinkVO> allLinks = service.findAllLinks(pageable);
+        return ResponseEntity.ok(allLinks);
     }
 
     @Override

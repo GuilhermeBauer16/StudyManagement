@@ -1,8 +1,11 @@
 package com.github.guilhermebauer.studymanagement.controller.contract;
 
+import com.github.guilhermebauer.studymanagement.model.values.LinkVO;
 import com.github.guilhermebauer.studymanagement.model.values.StudyMaterialVO;
 import com.github.guilhermebauer.studymanagement.request.LinkListToStudyMaterialRequest;
 import com.github.guilhermebauer.studymanagement.request.SingleLinkToStudyMaterialRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +37,13 @@ public interface StudyMaterialControllerContract {
     @PutMapping(value = "/updateLink")
     ResponseEntity<StudyMaterialVO> updateLinkInStudyMaterial(@RequestBody SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException;
 
+    @GetMapping(value = "/findAllLinks/{id}")
+    ResponseEntity<Page<LinkVO>> findAllLinksInStudyMaterial(@PathVariable(value = "id") String studyMaterialId, Pageable pageable);
+
     @DeleteMapping(value = "/deleteLinks")
     ResponseEntity<StudyMaterialVO> deleteLinkInStudyMaterial(@RequestBody SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException;
 
-    ResponseEntity<StudyMaterialVO> findAllLinkIntoStudyMaterial(StudyMaterialVO studyMaterialVO);
+
+
+
 }

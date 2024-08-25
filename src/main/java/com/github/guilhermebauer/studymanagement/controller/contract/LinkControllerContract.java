@@ -1,6 +1,7 @@
 package com.github.guilhermebauer.studymanagement.controller.contract;
 
 import com.github.guilhermebauer.studymanagement.model.LinkEntity;
+import com.github.guilhermebauer.studymanagement.model.values.LinkVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +19,13 @@ public interface LinkControllerContract {
     List<LinkEntity> create(List<LinkEntity> linkEntities) throws IllegalAccessException;
 
     @PutMapping
-    ResponseEntity<com.github.guilhermebauer.studymanagement.model.values.LinkVO> update(@RequestBody com.github.guilhermebauer.studymanagement.model.values.LinkVO linkVO) throws NoSuchFieldException, IllegalAccessException;
+    ResponseEntity<com.github.guilhermebauer.studymanagement.model.values.LinkVO> update(@RequestBody LinkVO linkVO) throws NoSuchFieldException, IllegalAccessException;
 
     @GetMapping(value = "/{id}")
     ResponseEntity<com.github.guilhermebauer.studymanagement.model.values.LinkVO>  findLinkById(@PathVariable(value = "id") String id) throws NoSuchFieldException, IllegalAccessException;
 
     @GetMapping
-    ResponseEntity<Page<com.github.guilhermebauer.studymanagement.model.values.LinkVO>> findAllLinks(Pageable pageable);
+    ResponseEntity<Page<LinkVO>> findAllLinks(Pageable pageable) throws NoSuchFieldException, IllegalAccessException;
 
     @DeleteMapping(value = "/{id}")
     ResponseEntity<Void> delete(@PathVariable(value = "id")String id);

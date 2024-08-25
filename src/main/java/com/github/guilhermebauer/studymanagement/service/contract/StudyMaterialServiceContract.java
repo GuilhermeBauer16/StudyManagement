@@ -1,8 +1,11 @@
 package com.github.guilhermebauer.studymanagement.service.contract;
 
+import com.github.guilhermebauer.studymanagement.model.values.LinkVO;
 import com.github.guilhermebauer.studymanagement.model.values.StudyMaterialVO;
 import com.github.guilhermebauer.studymanagement.request.LinkListToStudyMaterialRequest;
 import com.github.guilhermebauer.studymanagement.request.SingleLinkToStudyMaterialRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface StudyMaterialServiceContract {
@@ -25,6 +28,6 @@ public interface StudyMaterialServiceContract {
     @Transactional
     StudyMaterialVO deleteLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException;
 
-    StudyMaterialVO findAllLinkIntoStudyMaterial(StudyMaterialVO studyMaterialVO);
+    Page<LinkVO> findAllLinksInStudyMaterial(String studyMaterialId, Pageable pageable);
 
 }

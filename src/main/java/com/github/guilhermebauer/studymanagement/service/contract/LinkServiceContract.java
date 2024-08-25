@@ -17,7 +17,7 @@ public interface LinkServiceContract {
 
     LinkVO findLinkById(String id) throws NoSuchFieldException, IllegalAccessException;
 
-    Page<LinkVO> findAllLinks(Pageable pageable);
+    Page<LinkVO> findAllLinks(Pageable pageable) throws NoSuchFieldException, IllegalAccessException;
 
     @Transactional
     void delete(String id);

@@ -16,9 +16,13 @@ import com.github.guilhermebauer.studymanagement.request.SingleLinkToStudyMateri
 import com.github.guilhermebauer.studymanagement.service.contract.StudyMaterialServiceContract;
 import com.github.guilhermebauer.studymanagement.utils.ValidatorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,14 +35,13 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
 
 
     private final LinkService linkService;
-    private final LinkRepository linkRepository;
+
 
     @Autowired
     public StudyMaterialService(StudyMaterialRepository studyMaterialRepository, LinkService linkService,
                                 LinkRepository linkRepository) {
         this.repository = studyMaterialRepository;
         this.linkService = linkService;
-        this.linkRepository = linkRepository;
     }
 
 
@@ -54,7 +57,7 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
                 studyMaterialVO.getCourseEntity(),
                 linkEntityList
         );
-        ValidatorUtils.checkFieldNotNullAndNotEmptyOrThrowException(studyMaterialEntityToSave,STUDY_MATERIAL_NOT_FOUND, FieldNotFound.class);
+        ValidatorUtils.checkFieldNotNullAndNotEmptyOrThrowException(studyMaterialEntityToSave, STUDY_MATERIAL_NOT_FOUND, FieldNotFound.class);
         StudyMaterialEntity savedStudyMaterial = repository.save(studyMaterialEntityToSave);
         return BuildMapper.parseObject(new StudyMaterialVO(), savedStudyMaterial);
 
@@ -117,7 +120,6 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
             if (linkEntity.getId().equals(request.getLink().getId())) {
                 LinkVO linkVO1 = BuildMapper.parseObject(new LinkVO(), linkEntity);
                 linkService.update(linkVO1);
-                // Perform any other updates necessary
                 break;
             }
         }
@@ -149,8 +151,24 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
         return BuildMapper.parseObject(new StudyMaterialVO(), studyMaterialEntity);
     }
 
-    @Override
-    public StudyMaterialVO findAllLinkIntoStudyMaterial(StudyMaterialVO studyMaterialVO) {
-        return null;
+    public Page<LinkVO> findAllLinksInStudyMaterial(String studyMaterialId, Pageable pageable) {
+
+        // Fetch paginated links by study material ID
+        Page<LinkEntity> linkEntities = repository.findLinksByStudyMaterialId(studyMaterialId, pageable);
+
+        // Map LinkEntity to LinkVO
+        Page<LinkVO> linkVOs = linkEntities.map(linkEntity ->
+                {
+                    try {
+                        return BuildMapper.parseObject(new LinkVO(), linkEntity);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    } catch (NoSuchFieldException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        );
+
+        return linkVOs;
     }
 }
