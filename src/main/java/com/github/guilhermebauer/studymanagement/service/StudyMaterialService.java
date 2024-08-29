@@ -2,6 +2,7 @@ package com.github.guilhermebauer.studymanagement.service;
 
 
 import com.github.guilhermebauer.studymanagement.exception.FieldNotFound;
+import com.github.guilhermebauer.studymanagement.exception.LinkNotFoundException;
 import com.github.guilhermebauer.studymanagement.exception.StudyMaterialNotFoundException;
 import com.github.guilhermebauer.studymanagement.factory.StudyMaterialFactory;
 import com.github.guilhermebauer.studymanagement.mapper.BuildMapper;
@@ -9,10 +10,11 @@ import com.github.guilhermebauer.studymanagement.model.LinkEntity;
 import com.github.guilhermebauer.studymanagement.model.StudyMaterialEntity;
 import com.github.guilhermebauer.studymanagement.model.values.LinkVO;
 import com.github.guilhermebauer.studymanagement.model.values.StudyMaterialVO;
-import com.github.guilhermebauer.studymanagement.repository.LinkRepository;
 import com.github.guilhermebauer.studymanagement.repository.StudyMaterialRepository;
 import com.github.guilhermebauer.studymanagement.request.LinkListToStudyMaterialRequest;
 import com.github.guilhermebauer.studymanagement.request.SingleLinkToStudyMaterialRequest;
+import com.github.guilhermebauer.studymanagement.request.StudyMaterialUpdateRequest;
+import com.github.guilhermebauer.studymanagement.response.StudyMaterialUpdateResponse;
 import com.github.guilhermebauer.studymanagement.service.contract.StudyMaterialServiceContract;
 import com.github.guilhermebauer.studymanagement.utils.ValidatorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +33,16 @@ import java.util.List;
 public class StudyMaterialService implements StudyMaterialServiceContract {
 
     private static final String STUDY_MATERIAL_NOT_FOUND = "The study material was not found";
-    private final StudyMaterialRepository repository;
 
+    private static final String LINK_NOT_FOUND = "The link was not found!";
+
+    private final StudyMaterialRepository repository;
 
     private final LinkService linkService;
 
 
     @Autowired
-    public StudyMaterialService(StudyMaterialRepository studyMaterialRepository, LinkService linkService,
-                                LinkRepository linkRepository) {
+    public StudyMaterialService(StudyMaterialRepository studyMaterialRepository, LinkService linkService) {
         this.repository = studyMaterialRepository;
         this.linkService = linkService;
     }
@@ -64,8 +67,20 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
     }
 
     @Override
-    public StudyMaterialVO update(StudyMaterialVO studyMaterialVO) throws NoSuchFieldException, IllegalAccessException {
-        return null;
+    public StudyMaterialUpdateResponse update(StudyMaterialUpdateRequest request) throws NoSuchFieldException, IllegalAccessException {
+
+        ValidatorUtils.checkObjectIsNullOrThrowException(request,STUDY_MATERIAL_NOT_FOUND,StudyMaterialNotFoundException.class);
+
+        StudyMaterialEntity studyMaterialEntity = repository.findById(request.getId())
+                .orElseThrow(() -> new StudyMaterialNotFoundException(STUDY_MATERIAL_NOT_FOUND));
+
+        StudyMaterialEntity updatedStudyMaterialEntity = ValidatorUtils.updateFieldIfNotNull
+                (studyMaterialEntity, request, STUDY_MATERIAL_NOT_FOUND, StudyMaterialNotFoundException.class);
+
+        ValidatorUtils.checkFieldNotNullAndNotEmptyOrThrowException(updatedStudyMaterialEntity,STUDY_MATERIAL_NOT_FOUND,FieldNotFound.class);
+
+        StudyMaterialEntity savedStudyMaterialEntity = repository.save(updatedStudyMaterialEntity);
+        return BuildMapper.parseObject(new StudyMaterialUpdateResponse(), savedStudyMaterialEntity);
     }
 
     @Override
@@ -76,8 +91,17 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
     }
 
     @Override
-    public StudyMaterialVO findAll(StudyMaterialVO studyMaterialVO) throws NoSuchFieldException, IllegalAccessException {
-        return null;
+    public Page<StudyMaterialVO> findAll(Pageable pageable) throws NoSuchFieldException, IllegalAccessException {
+
+        Page<StudyMaterialEntity> allLinks = repository.findAll(pageable);
+        List<StudyMaterialEntity> content = allLinks.getContent();
+        List<StudyMaterialVO> informationResponses = new ArrayList<>();
+        for(StudyMaterialEntity studyMaterialEntity : content){
+
+            informationResponses.add(BuildMapper.parseObject(new StudyMaterialVO(), studyMaterialEntity));
+        }
+
+        return new PageImpl<>(informationResponses, pageable, allLinks.getTotalElements());
     }
 
     @Override
@@ -152,23 +176,15 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
     }
 
     public Page<LinkVO> findAllLinksInStudyMaterial(String studyMaterialId, Pageable pageable) {
-
-        // Fetch paginated links by study material ID
         Page<LinkEntity> linkEntities = repository.findLinksByStudyMaterialId(studyMaterialId, pageable);
 
-        // Map LinkEntity to LinkVO
-        Page<LinkVO> linkVOs = linkEntities.map(linkEntity ->
-                {
-                    try {
-                        return BuildMapper.parseObject(new LinkVO(), linkEntity);
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    } catch (NoSuchFieldException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-        );
+        return linkEntities.map(linkEntity -> {
+            try {
+                return BuildMapper.parseObject(new LinkVO(), linkEntity);
+            } catch (IllegalAccessException | NoSuchFieldException e) {
 
-        return linkVOs;
+                throw new LinkNotFoundException(LINK_NOT_FOUND);
+            }
+        });
     }
 }

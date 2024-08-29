@@ -4,8 +4,11 @@ import com.github.guilhermebauer.studymanagement.model.values.LinkVO;
 import com.github.guilhermebauer.studymanagement.model.values.StudyMaterialVO;
 import com.github.guilhermebauer.studymanagement.request.LinkListToStudyMaterialRequest;
 import com.github.guilhermebauer.studymanagement.request.SingleLinkToStudyMaterialRequest;
+import com.github.guilhermebauer.studymanagement.request.StudyMaterialUpdateRequest;
+import com.github.guilhermebauer.studymanagement.response.StudyMaterialUpdateResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +23,13 @@ public interface StudyMaterialControllerContract {
     ResponseEntity<StudyMaterialVO> create(@RequestBody StudyMaterialVO studyMaterialVO) throws IllegalAccessException, NoSuchFieldException;
 
     @PutMapping
-    ResponseEntity<StudyMaterialVO> update(@RequestBody StudyMaterialVO studyMaterialVO) throws NoSuchFieldException, IllegalAccessException;
+    ResponseEntity<StudyMaterialUpdateResponse> update(@RequestBody StudyMaterialUpdateRequest request) throws NoSuchFieldException, IllegalAccessException;
 
     @GetMapping(value = "/{id}")
     ResponseEntity<StudyMaterialVO> findById(@PathVariable(value = "id") String id) throws NoSuchFieldException, IllegalAccessException;
 
     @GetMapping
-    ResponseEntity<StudyMaterialVO> findAll(StudyMaterialVO studyMaterialVO) throws NoSuchFieldException, IllegalAccessException;
+    ResponseEntity<Page<StudyMaterialVO>> findAll(@PageableDefault(size = 5) Pageable pageable)  throws NoSuchFieldException, IllegalAccessException;
 
     @DeleteMapping(value = "/{id}")
     ResponseEntity<Void> delete(@PathVariable(value = "id") String id);

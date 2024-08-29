@@ -25,7 +25,7 @@ public class StudyMaterialEntity {
     @JoinColumn(name = "course_id")
     private CourseEntity courseEntity;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {ALL})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = ALL)
     @JoinTable(
             name = "study_materials_links",
             joinColumns = @JoinColumn(name = "study_material_id"),

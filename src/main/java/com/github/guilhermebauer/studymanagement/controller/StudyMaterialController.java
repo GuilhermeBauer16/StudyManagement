@@ -5,6 +5,8 @@ import com.github.guilhermebauer.studymanagement.model.values.LinkVO;
 import com.github.guilhermebauer.studymanagement.model.values.StudyMaterialVO;
 import com.github.guilhermebauer.studymanagement.request.LinkListToStudyMaterialRequest;
 import com.github.guilhermebauer.studymanagement.request.SingleLinkToStudyMaterialRequest;
+import com.github.guilhermebauer.studymanagement.request.StudyMaterialUpdateRequest;
+import com.github.guilhermebauer.studymanagement.response.StudyMaterialUpdateResponse;
 import com.github.guilhermebauer.studymanagement.service.StudyMaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,8 +35,9 @@ public class StudyMaterialController implements StudyMaterialControllerContract 
     }
 
     @Override
-    public ResponseEntity<StudyMaterialVO> update(StudyMaterialVO studyMaterialVO) throws NoSuchFieldException, IllegalAccessException {
-        return null;
+    public ResponseEntity<StudyMaterialUpdateResponse> update(StudyMaterialUpdateRequest request) throws NoSuchFieldException, IllegalAccessException {
+        StudyMaterialUpdateResponse updatedStudyMaterialVO = service.update(request);
+        return ResponseEntity.ok(updatedStudyMaterialVO);
     }
 
     @Override
@@ -44,8 +47,9 @@ public class StudyMaterialController implements StudyMaterialControllerContract 
     }
 
     @Override
-    public ResponseEntity<StudyMaterialVO> findAll(StudyMaterialVO studyMaterialVO) throws NoSuchFieldException, IllegalAccessException {
-        return null;
+    public ResponseEntity<Page<StudyMaterialVO>> findAll(Pageable pageable) throws NoSuchFieldException, IllegalAccessException {
+        Page<StudyMaterialVO> allStudyMaterials = service.findAll(pageable);
+        return ResponseEntity.ok(allStudyMaterials);
     }
 
     @Override

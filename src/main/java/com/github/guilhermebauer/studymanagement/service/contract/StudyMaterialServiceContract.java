@@ -4,6 +4,8 @@ import com.github.guilhermebauer.studymanagement.model.values.LinkVO;
 import com.github.guilhermebauer.studymanagement.model.values.StudyMaterialVO;
 import com.github.guilhermebauer.studymanagement.request.LinkListToStudyMaterialRequest;
 import com.github.guilhermebauer.studymanagement.request.SingleLinkToStudyMaterialRequest;
+import com.github.guilhermebauer.studymanagement.request.StudyMaterialUpdateRequest;
+import com.github.guilhermebauer.studymanagement.response.StudyMaterialUpdateResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,11 +15,11 @@ public interface StudyMaterialServiceContract {
 
     StudyMaterialVO create(StudyMaterialVO studyMaterialVO) throws NoSuchFieldException, IllegalAccessException;
 
-    StudyMaterialVO update(StudyMaterialVO studyMaterialVO) throws NoSuchFieldException, IllegalAccessException;
+    StudyMaterialUpdateResponse update(StudyMaterialUpdateRequest request) throws NoSuchFieldException, IllegalAccessException;
 
     StudyMaterialVO findByID(String id) throws NoSuchFieldException, IllegalAccessException;
 
-    StudyMaterialVO findAll(StudyMaterialVO studyMaterialVO) throws NoSuchFieldException, IllegalAccessException;
+    Page<StudyMaterialVO> findAll(Pageable pageable) throws NoSuchFieldException, IllegalAccessException;
 
     void delete(String id);
 

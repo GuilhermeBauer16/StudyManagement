@@ -4,17 +4,12 @@ import com.github.guilhermebauer.studymanagement.exception.FieldNotFound;
 import com.github.guilhermebauer.studymanagement.exception.LinkNotFoundException;
 import com.github.guilhermebauer.studymanagement.factory.LinkEntityFactory;
 import com.github.guilhermebauer.studymanagement.mapper.BuildMapper;
-import com.github.guilhermebauer.studymanagement.model.CourseEntity;
 import com.github.guilhermebauer.studymanagement.model.LinkEntity;
 import com.github.guilhermebauer.studymanagement.model.values.LinkVO;
 import com.github.guilhermebauer.studymanagement.repository.LinkRepository;
-import com.github.guilhermebauer.studymanagement.response.CourseResponse;
 import com.github.guilhermebauer.studymanagement.service.contract.LinkServiceContract;
 import com.github.guilhermebauer.studymanagement.utils.ValidatorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,19 +63,6 @@ public class LinkService implements LinkServiceContract {
         return BuildMapper.parseObject(new LinkVO(), linkEntity);
     }
 
-    @Override
-    public Page<LinkVO> findAllLinks(Pageable pageable) throws NoSuchFieldException, IllegalAccessException {
-
-        Page<LinkEntity> allLinks = repository.findAll(pageable);
-        List<LinkEntity> content = allLinks.getContent();
-        List<LinkVO> informationResponses = new ArrayList<>();
-        for(LinkEntity linkEntity : content){
-
-            informationResponses.add(BuildMapper.parseObject(new LinkVO(), linkEntity));
-        }
-
-        return new PageImpl<>(informationResponses, pageable, allLinks.getTotalElements());
-    }
 
     @Override
     public void delete(String id) {
