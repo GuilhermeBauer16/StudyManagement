@@ -80,9 +80,9 @@ public class StudyMaterialController implements StudyMaterialControllerContract 
     }
 
     @Override
-    public ResponseEntity<StudyMaterialVO> deleteLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) {
-        StudyMaterialVO studyMaterialVO = service.deleteLinkInStudyMaterial(request);
-        return ResponseEntity.ok(studyMaterialVO);
+    public ResponseEntity<Void> deleteLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) {
+        service.deleteLinkInStudyMaterial(request);
+        return ResponseEntity.noContent().build();
     }
 
 

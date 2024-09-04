@@ -34,13 +34,13 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -52,13 +52,9 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
     private static StudyMaterialVO studyMaterialVO;
-    private static StudyMaterialEntity studyMaterialEntity;
-    private static  LinkVO linkVO;
     private static LinkListToStudyMaterialRequest linkListToStudyMaterialRequest;
     private static SingleLinkToStudyMaterialRequest singleLinkToStudyMaterialRequest;
     private static StudyMaterialUpdateRequest studyMaterialUpdateRequest;
-    private static StudyMaterialUpdateResponse studyMaterialUpdateResponse;
-
 
     private static final String ID = "5f68880e-7356-4c86-a4a9-f8cc16e2ec87";
     private static final String URL = "https://start.spring.io/";
@@ -86,29 +82,22 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
         LinkEntity linkEntity = new LinkEntity(ID, URL, DESCRIPTION);
         linkRepository.save(linkEntity);
 
-        linkVO = new LinkVO(ID, URL, DESCRIPTION);
+        LinkVO linkVO = new LinkVO(ID, URL, DESCRIPTION);
 
         CourseEntity courseEntity = new CourseEntity(ID, COURSE_TITLE, COURSE_DESCRIPTION);
         courseRepository.save(courseEntity);
 
         studyMaterialVO = new StudyMaterialVO(ID, TITLE, CONTENT, courseEntity, List.of(linkEntity));
-        studyMaterialEntity
+        StudyMaterialEntity studyMaterialEntity
                 = new StudyMaterialEntity(ID, TITLE, CONTENT, courseEntity, List.of(linkEntity));
         singleLinkToStudyMaterialRequest = new SingleLinkToStudyMaterialRequest(ID, linkVO);
         linkListToStudyMaterialRequest = new LinkListToStudyMaterialRequest(ID, List.of(linkEntity));
         studyMaterialUpdateRequest = new StudyMaterialUpdateRequest(ID, TITLE, CONTENT);
-        studyMaterialUpdateResponse = new StudyMaterialUpdateResponse(ID, TITLE, CONTENT);
 
         studyMaterialRepository.save(studyMaterialEntity);
 
 
-
-
-
     }
-
-
-
 
 
     @Test
@@ -131,12 +120,15 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
 
         Assertions.assertNotNull(studyMaterialVOResponse);
         Assertions.assertNotNull(studyMaterialVOResponse.getId());
-        Assertions.assertTrue(studyMaterialVOResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
+        assertTrue(studyMaterialVOResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
 
         assertEquals(CONTENT, studyMaterialVOResponse.getContent());
         assertEquals(TITLE, studyMaterialVOResponse.getTitle());
         assertEquals(COURSE_TITLE, studyMaterialVOResponse.getCourseEntity().getTitle());
         assertEquals(COURSE_DESCRIPTION, studyMaterialVOResponse.getCourseEntity().getDescription());
+        assertEquals(URL, studyMaterialVOResponse.getLinks().getFirst().getUrl());
+        assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
+
 
 
         studyMaterialVO.setId(studyMaterialVOResponse.getId());
@@ -161,19 +153,22 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
 
         Assertions.assertNotNull(studyMaterialVOResponse);
         Assertions.assertNotNull(studyMaterialVOResponse.getId());
-        Assertions.assertTrue(studyMaterialVOResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
+        assertTrue(studyMaterialVOResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
 
         assertEquals(CONTENT, studyMaterialVOResponse.getContent());
         assertEquals(TITLE, studyMaterialVOResponse.getTitle());
         assertEquals(COURSE_TITLE, studyMaterialVOResponse.getCourseEntity().getTitle());
         assertEquals(COURSE_DESCRIPTION, studyMaterialVOResponse.getCourseEntity().getDescription());
+        assertEquals(URL, studyMaterialVOResponse.getLinks().getFirst().getUrl());
+        assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
+
 
 
     }
 
     @Test
     @Order(3)
-    void givenCourseList_when_FindAllCourses_ShouldReturnACourseList() throws JsonProcessingException {
+    void givenStudyMaterialList_when_FindAllStudyMaterial_ShouldReturnAStudyMaterialList() throws JsonProcessingException {
 
         var content = given().spec(specification)
                 .when()
@@ -193,17 +188,18 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
 
         Assertions.assertNotNull(studyMaterialVOResponse);
         Assertions.assertNotNull(studyMaterialVOResponse.getId());
-        Assertions.assertTrue(studyMaterialVOResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
+        assertTrue(studyMaterialVOResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
 
         assertEquals(CONTENT, studyMaterialVOResponse.getContent());
         assertEquals(TITLE, studyMaterialVOResponse.getTitle());
         assertEquals(COURSE_TITLE, studyMaterialVOResponse.getCourseEntity().getTitle());
         assertEquals(COURSE_DESCRIPTION, studyMaterialVOResponse.getCourseEntity().getDescription());
+        assertEquals(URL, studyMaterialVOResponse.getLinks().getFirst().getUrl());
+        assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
+
 
 
     }
-
-
 
 
     @Test
@@ -227,17 +223,84 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
 
         Assertions.assertNotNull(studyMaterialVOResponse);
         Assertions.assertNotNull(studyMaterialVOResponse.getId());
-        Assertions.assertTrue(studyMaterialVOResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
+        assertTrue(studyMaterialVOResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
 
         assertEquals(CONTENT, studyMaterialVOResponse.getContent());
         assertEquals(TITLE, studyMaterialVOResponse.getTitle());
         assertEquals(COURSE_TITLE, studyMaterialVOResponse.getCourseEntity().getTitle());
         assertEquals(COURSE_DESCRIPTION, studyMaterialVOResponse.getCourseEntity().getDescription());
+        assertEquals(URL, studyMaterialVOResponse.getLinks().getFirst().getUrl());
+        assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
+
     }
 
     @Test
     @Order(5)
-    void givenStudyMaterialUpdateRequest_when_UpdateRequest_ShouldReturnUpdatedStudyMaterial() throws IOException {
+    void givenStudyMaterialObject_when_FindAllLinks_ShouldReturnALinkList() throws JsonProcessingException {
+
+        var content = given().spec(specification)
+                .contentType(TestConfigs.CONTENT_TYPE_JSON)
+                .pathParam("id", studyMaterialVO.getId())
+                .when()
+                .get("/findAllLinks/{id}")
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
+
+
+        PaginatedResponse<LinkVO> paginatedResponse =
+                objectMapper.readValue(content, new TypeReference<>() {
+                });
+
+        List<LinkVO> linkVOS = paginatedResponse.getContent();
+        LinkVO linkVOResponse = linkVOS.getFirst();
+
+        Assertions.assertNotNull(linkVOResponse);
+        Assertions.assertNotNull(linkVOResponse.getId());
+        assertTrue(linkVOResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
+
+        assertEquals(DESCRIPTION, linkVOResponse.getDescription());
+        assertEquals(URL, linkVOResponse.getUrl());
+
+    }
+
+    @Test
+    @Order(6)
+    void givenStudyMaterialObject_when_UpdateALink_ShouldReturnAStudyMaterialObject() throws JsonProcessingException {
+
+        var content = given().spec(specification)
+                .contentType(TestConfigs.CONTENT_TYPE_JSON)
+                .body(singleLinkToStudyMaterialRequest)
+                .when()
+                .put("/updateLink")
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
+
+
+        StudyMaterialVO studyMaterialVOResponse = objectMapper.readValue(content, StudyMaterialVO.class);
+
+        Assertions.assertNotNull(studyMaterialVOResponse);
+        Assertions.assertNotNull(studyMaterialVOResponse.getId());
+        assertTrue(studyMaterialVOResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
+
+        assertEquals(CONTENT, studyMaterialVOResponse.getContent());
+        assertEquals(TITLE, studyMaterialVOResponse.getTitle());
+        assertEquals(COURSE_TITLE, studyMaterialVOResponse.getCourseEntity().getTitle());
+        assertEquals(COURSE_DESCRIPTION, studyMaterialVOResponse.getCourseEntity().getDescription());
+        assertEquals(URL, studyMaterialVOResponse.getLinks().getFirst().getUrl());
+        assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
+
+    }
+
+
+    @Test
+    @Order(7)
+    void givenStudyMaterialUpdateRequest_when_UpdateAStudyMaterial_ShouldReturnUpdatedStudyMaterial() throws IOException {
 
         studyMaterialUpdateRequest.setContent("A Spring Boot guide");
         studyMaterialUpdateRequest.setTitle("Spring Boot introduction");
@@ -257,28 +320,33 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
 
         Assertions.assertNotNull(response);
         Assertions.assertNotNull(response.getId());
-        Assertions.assertTrue(response.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
+        assertTrue(response.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
 
         assertEquals("A Spring Boot guide", response.getContent());
         assertEquals("Spring Boot introduction", response.getTitle());
 
+
     }
 
-//    @PostMapping(value = "/addLinks")
-//    ResponseEntity<StudyMaterialVO> addLinkInStudyMaterial(@RequestBody LinkListToStudyMaterialRequest request);
-//
-//    @PutMapping(value = "/updateLink")
-//    ResponseEntity<StudyMaterialVO> updateLinkInStudyMaterial(@RequestBody SingleLinkToStudyMaterialRequest request);
-//
-//    @GetMapping(value = "/findAllLinks/{id}")
-//    ResponseEntity<Page<LinkVO>> findAllLinksInStudyMaterial(@PathVariable(value = "id") String studyMaterialId, Pageable pageable);
-//
-//    @DeleteMapping(value = "/deleteLinks")
-//    ResponseEntity<StudyMaterialVO> deleteLinkInStudyMaterial(@RequestBody SingleLinkToStudyMaterialRequest request);
+    @Test
+    @Order(8)
+    void givenStudyMaterialObject_when_DeleteALink_ShouldReturnNoContent(){
+
+        given().spec(specification)
+                .contentType(TestConfigs.CONTENT_TYPE_JSON)
+                .body(singleLinkToStudyMaterialRequest)
+                .when()
+                .delete("/deleteLinks")
+                .then()
+                .statusCode(204)
+                .extract()
+                .body()
+                .asString();
 
 
+    }
 
-    @Order(5)
+    @Order(9)
     @Test
     void givenPersonalizedWorkoutExercise_when_delete_ShouldReturnNoContent() {
 

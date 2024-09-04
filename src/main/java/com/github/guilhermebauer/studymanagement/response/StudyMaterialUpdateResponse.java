@@ -6,14 +6,6 @@ public class StudyMaterialUpdateResponse {
     private String title;
     private String content;
 
-    public StudyMaterialUpdateResponse() {
-    }
-
-    public StudyMaterialUpdateResponse(String id, String title, String content) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-    }
 
     public String getId() {
         return id;

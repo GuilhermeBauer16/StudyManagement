@@ -168,6 +168,8 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
             }
         }
 
+        studyMaterialEntity.setLinks(mutableLinks);
+
         repository.save(studyMaterialEntity);
 
         return BuildMapper.parseObject(new StudyMaterialVO(), studyMaterialEntity);

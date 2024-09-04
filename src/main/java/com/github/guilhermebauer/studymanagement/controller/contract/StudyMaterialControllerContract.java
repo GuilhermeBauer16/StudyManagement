@@ -44,7 +44,7 @@ public interface StudyMaterialControllerContract {
     ResponseEntity<Page<LinkVO>> findAllLinksInStudyMaterial(@PathVariable(value = "id") String studyMaterialId, Pageable pageable);
 
     @DeleteMapping(value = "/deleteLinks")
-    ResponseEntity<StudyMaterialVO> deleteLinkInStudyMaterial(@RequestBody SingleLinkToStudyMaterialRequest request);
+    ResponseEntity<Void> deleteLinkInStudyMaterial(@RequestBody SingleLinkToStudyMaterialRequest request);
 
 
 
