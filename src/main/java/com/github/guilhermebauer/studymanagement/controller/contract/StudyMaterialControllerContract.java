@@ -20,31 +20,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface StudyMaterialControllerContract {
 
     @PostMapping
-    ResponseEntity<StudyMaterialVO> create(@RequestBody StudyMaterialVO studyMaterialVO) throws IllegalAccessException, NoSuchFieldException;
+    ResponseEntity<StudyMaterialVO> create(@RequestBody StudyMaterialVO studyMaterialVO) ;
 
     @PutMapping
-    ResponseEntity<StudyMaterialUpdateResponse> update(@RequestBody StudyMaterialUpdateRequest request) throws NoSuchFieldException, IllegalAccessException;
+    ResponseEntity<StudyMaterialUpdateResponse> update(@RequestBody StudyMaterialUpdateRequest request) ;
 
     @GetMapping(value = "/{id}")
-    ResponseEntity<StudyMaterialVO> findById(@PathVariable(value = "id") String id) throws NoSuchFieldException, IllegalAccessException;
+    ResponseEntity<StudyMaterialVO> findById(@PathVariable(value = "id") String id);
 
     @GetMapping
-    ResponseEntity<Page<StudyMaterialVO>> findAll(@PageableDefault(size = 5) Pageable pageable)  throws NoSuchFieldException, IllegalAccessException;
+    ResponseEntity<Page<StudyMaterialVO>> findAll(@PageableDefault(size = 5) Pageable pageable) ;
 
     @DeleteMapping(value = "/{id}")
     ResponseEntity<Void> delete(@PathVariable(value = "id") String id);
 
     @PostMapping(value = "/addLinks")
-    ResponseEntity<StudyMaterialVO> addLinkInStudyMaterial(@RequestBody LinkListToStudyMaterialRequest request) throws IllegalAccessException, NoSuchFieldException;
+    ResponseEntity<StudyMaterialVO> addLinkInStudyMaterial(@RequestBody LinkListToStudyMaterialRequest request);
 
     @PutMapping(value = "/updateLink")
-    ResponseEntity<StudyMaterialVO> updateLinkInStudyMaterial(@RequestBody SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException;
+    ResponseEntity<StudyMaterialVO> updateLinkInStudyMaterial(@RequestBody SingleLinkToStudyMaterialRequest request);
 
     @GetMapping(value = "/findAllLinks/{id}")
     ResponseEntity<Page<LinkVO>> findAllLinksInStudyMaterial(@PathVariable(value = "id") String studyMaterialId, Pageable pageable);
 
     @DeleteMapping(value = "/deleteLinks")
-    ResponseEntity<StudyMaterialVO> deleteLinkInStudyMaterial(@RequestBody SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException;
+    ResponseEntity<StudyMaterialVO> deleteLinkInStudyMaterial(@RequestBody SingleLinkToStudyMaterialRequest request);
 
 
 

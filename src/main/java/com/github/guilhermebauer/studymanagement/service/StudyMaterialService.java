@@ -2,7 +2,6 @@ package com.github.guilhermebauer.studymanagement.service;
 
 
 import com.github.guilhermebauer.studymanagement.exception.FieldNotFound;
-import com.github.guilhermebauer.studymanagement.exception.LinkNotFoundException;
 import com.github.guilhermebauer.studymanagement.exception.StudyMaterialNotFoundException;
 import com.github.guilhermebauer.studymanagement.factory.StudyMaterialFactory;
 import com.github.guilhermebauer.studymanagement.mapper.BuildMapper;
@@ -34,8 +33,6 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
 
     private static final String STUDY_MATERIAL_NOT_FOUND = "The study material was not found";
 
-    private static final String LINK_NOT_FOUND = "The link was not found!";
-
     private final StudyMaterialRepository repository;
 
     private final LinkService linkService;
@@ -50,7 +47,7 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
 
     @Override
     @Transactional
-    public StudyMaterialVO create(StudyMaterialVO studyMaterialVO) throws NoSuchFieldException, IllegalAccessException {
+    public StudyMaterialVO create(StudyMaterialVO studyMaterialVO) {
 
         ValidatorUtils.checkObjectIsNullOrThrowException(studyMaterialVO, STUDY_MATERIAL_NOT_FOUND, StudyMaterialNotFoundException.class);
         List<LinkEntity> linkEntityList = linkService.create(studyMaterialVO.getLinks());
@@ -67,7 +64,7 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
     }
 
     @Override
-    public StudyMaterialUpdateResponse update(StudyMaterialUpdateRequest request) throws NoSuchFieldException, IllegalAccessException {
+    public StudyMaterialUpdateResponse update(StudyMaterialUpdateRequest request){
 
         ValidatorUtils.checkObjectIsNullOrThrowException(request,STUDY_MATERIAL_NOT_FOUND,StudyMaterialNotFoundException.class);
 
@@ -84,14 +81,14 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
     }
 
     @Override
-    public StudyMaterialVO findByID(String id) throws NoSuchFieldException, IllegalAccessException {
+    public StudyMaterialVO findByID(String id) {
 
         StudyMaterialEntity studyMaterialEntity = repository.findById(id).orElseThrow(() -> new StudyMaterialNotFoundException(STUDY_MATERIAL_NOT_FOUND));
         return BuildMapper.parseObject(new StudyMaterialVO(), studyMaterialEntity);
     }
 
     @Override
-    public Page<StudyMaterialVO> findAll(Pageable pageable) throws NoSuchFieldException, IllegalAccessException {
+    public Page<StudyMaterialVO> findAll(Pageable pageable) {
 
         Page<StudyMaterialEntity> allLinks = repository.findAll(pageable);
         List<StudyMaterialEntity> content = allLinks.getContent();
@@ -116,12 +113,12 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
     }
 
     @Override
-    public StudyMaterialVO addLinkInStudyMaterial(LinkListToStudyMaterialRequest request) throws IllegalAccessException, NoSuchFieldException {
+    public StudyMaterialVO addLinkInStudyMaterial(LinkListToStudyMaterialRequest request){
 
         StudyMaterialEntity studyMaterialEntity = repository.findById(request.getId())
                 .orElseThrow(() -> new StudyMaterialNotFoundException(STUDY_MATERIAL_NOT_FOUND));
 
-        List<LinkEntity> links = studyMaterialEntity.getLinks();
+        List<LinkEntity> links = new ArrayList<>(studyMaterialEntity.getLinks());
         List<LinkEntity> linkEntityList = linkService.create(request.getLinks());
         links.addAll(linkEntityList);
         studyMaterialEntity.setLinks(links);
@@ -133,7 +130,7 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
 
     @Override
     @Transactional
-    public StudyMaterialVO updateLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException {
+    public StudyMaterialVO updateLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) {
 
         StudyMaterialEntity studyMaterialEntity = repository.findById(request.getId())
                 .orElseThrow(() -> new StudyMaterialNotFoundException(STUDY_MATERIAL_NOT_FOUND));
@@ -154,12 +151,13 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
 
     @Override
     @Transactional
-    public StudyMaterialVO deleteLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException {
+    public StudyMaterialVO deleteLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request)  {
 
         StudyMaterialEntity studyMaterialEntity = repository.findById(request.getId())
                 .orElseThrow(() -> new StudyMaterialNotFoundException(STUDY_MATERIAL_NOT_FOUND));
 
-        Iterator<LinkEntity> linkIterator = studyMaterialEntity.getLinks().iterator();
+        List<LinkEntity> mutableLinks = new ArrayList<>(studyMaterialEntity.getLinks());
+        Iterator<LinkEntity> linkIterator = mutableLinks.iterator();
 
         while (linkIterator.hasNext()) {
             LinkEntity linkEntity = linkIterator.next();
@@ -178,13 +176,6 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
     public Page<LinkVO> findAllLinksInStudyMaterial(String studyMaterialId, Pageable pageable) {
         Page<LinkEntity> linkEntities = repository.findLinksByStudyMaterialId(studyMaterialId, pageable);
 
-        return linkEntities.map(linkEntity -> {
-            try {
-                return BuildMapper.parseObject(new LinkVO(), linkEntity);
-            } catch (IllegalAccessException | NoSuchFieldException e) {
-
-                throw new LinkNotFoundException(LINK_NOT_FOUND);
-            }
-        });
+        return linkEntities.map(linkEntity -> BuildMapper.parseObject(new LinkVO(), linkEntity));
     }
 }

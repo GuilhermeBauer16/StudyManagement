@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface LinkServiceContract {
 
-    List<LinkEntity> create(List<LinkEntity> linkEntities) throws IllegalAccessException;
+    List<LinkEntity> create(List<LinkEntity> linkEntities);
 
-    LinkVO update(com.github.guilhermebauer.studymanagement.model.values.LinkVO linkVO) throws NoSuchFieldException, IllegalAccessException;
+    LinkVO update(com.github.guilhermebauer.studymanagement.model.values.LinkVO linkVO);
 
-    LinkVO findLinkById(String id) throws NoSuchFieldException, IllegalAccessException;
+    LinkVO findLinkById(String id) ;
 
     @Transactional
     void delete(String id);

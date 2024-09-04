@@ -6,6 +6,12 @@ public class StudyMaterialUpdateRequest {
     private String title;
     private String content;
 
+    public StudyMaterialUpdateRequest(String id, String title, String content) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+    }
+
     public String getId() {
         return id;
     }

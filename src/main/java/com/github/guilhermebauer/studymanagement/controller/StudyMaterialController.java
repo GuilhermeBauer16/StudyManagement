@@ -28,26 +28,26 @@ public class StudyMaterialController implements StudyMaterialControllerContract 
     }
 
     @Override
-    public ResponseEntity<StudyMaterialVO> create(StudyMaterialVO studyMaterialVO) throws IllegalAccessException, NoSuchFieldException {
+    public ResponseEntity<StudyMaterialVO> create(StudyMaterialVO studyMaterialVO) {
         StudyMaterialVO createdStudyMaterialVO = service.create(studyMaterialVO);
         return new ResponseEntity<>(createdStudyMaterialVO, HttpStatus.CREATED);
 
     }
 
     @Override
-    public ResponseEntity<StudyMaterialUpdateResponse> update(StudyMaterialUpdateRequest request) throws NoSuchFieldException, IllegalAccessException {
+    public ResponseEntity<StudyMaterialUpdateResponse> update(StudyMaterialUpdateRequest request) {
         StudyMaterialUpdateResponse updatedStudyMaterialVO = service.update(request);
         return ResponseEntity.ok(updatedStudyMaterialVO);
     }
 
     @Override
-    public ResponseEntity<StudyMaterialVO> findById(String id) throws NoSuchFieldException, IllegalAccessException {
+    public ResponseEntity<StudyMaterialVO> findById(String id) {
         StudyMaterialVO studyMaterialByID = service.findByID(id);
         return ResponseEntity.ok(studyMaterialByID);
     }
 
     @Override
-    public ResponseEntity<Page<StudyMaterialVO>> findAll(Pageable pageable) throws NoSuchFieldException, IllegalAccessException {
+    public ResponseEntity<Page<StudyMaterialVO>> findAll(Pageable pageable) {
         Page<StudyMaterialVO> allStudyMaterials = service.findAll(pageable);
         return ResponseEntity.ok(allStudyMaterials);
     }
@@ -62,13 +62,13 @@ public class StudyMaterialController implements StudyMaterialControllerContract 
     }
 
     @Override
-    public ResponseEntity<StudyMaterialVO> addLinkInStudyMaterial(LinkListToStudyMaterialRequest request) throws IllegalAccessException, NoSuchFieldException {
+    public ResponseEntity<StudyMaterialVO> addLinkInStudyMaterial(LinkListToStudyMaterialRequest request) {
         StudyMaterialVO studyMaterialVO = service.addLinkInStudyMaterial(request);
         return new ResponseEntity<>(studyMaterialVO, HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<StudyMaterialVO> updateLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException {
+    public ResponseEntity<StudyMaterialVO> updateLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request){
         StudyMaterialVO updatedLink = service.updateLinkInStudyMaterial(request);
         return ResponseEntity.ok(updatedLink);
     }
@@ -80,7 +80,7 @@ public class StudyMaterialController implements StudyMaterialControllerContract 
     }
 
     @Override
-    public ResponseEntity<StudyMaterialVO> deleteLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException {
+    public ResponseEntity<StudyMaterialVO> deleteLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) {
         StudyMaterialVO studyMaterialVO = service.deleteLinkInStudyMaterial(request);
         return ResponseEntity.ok(studyMaterialVO);
     }

@@ -7,6 +7,11 @@ public class SingleLinkToStudyMaterialRequest {
     private String id;
     private LinkVO link;
 
+    public SingleLinkToStudyMaterialRequest(String id, LinkVO link) {
+        this.id = id;
+        this.link = link;
+    }
+
     public String getId() {
         return id;
     }

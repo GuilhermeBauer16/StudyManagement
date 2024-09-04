@@ -9,6 +9,11 @@ public class LinkListToStudyMaterialRequest {
     private String id;
     private List<LinkEntity> links;
 
+    public LinkListToStudyMaterialRequest(String id, List<LinkEntity> links) {
+        this.id = id;
+        this.links = links;
+    }
+
     public String getId() {
         return id;
     }

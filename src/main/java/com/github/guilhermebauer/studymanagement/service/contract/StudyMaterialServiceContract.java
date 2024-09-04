@@ -13,22 +13,22 @@ import org.springframework.transaction.annotation.Transactional;
 public interface StudyMaterialServiceContract {
 
 
-    StudyMaterialVO create(StudyMaterialVO studyMaterialVO) throws NoSuchFieldException, IllegalAccessException;
+    StudyMaterialVO create(StudyMaterialVO studyMaterialVO);
 
-    StudyMaterialUpdateResponse update(StudyMaterialUpdateRequest request) throws NoSuchFieldException, IllegalAccessException;
+    StudyMaterialUpdateResponse update(StudyMaterialUpdateRequest request);
 
-    StudyMaterialVO findByID(String id) throws NoSuchFieldException, IllegalAccessException;
+    StudyMaterialVO findByID(String id);
 
-    Page<StudyMaterialVO> findAll(Pageable pageable) throws NoSuchFieldException, IllegalAccessException;
+    Page<StudyMaterialVO> findAll(Pageable pageable);
 
     void delete(String id);
 
-    StudyMaterialVO addLinkInStudyMaterial(LinkListToStudyMaterialRequest request) throws IllegalAccessException, NoSuchFieldException;
+    StudyMaterialVO addLinkInStudyMaterial(LinkListToStudyMaterialRequest request);
 
-    StudyMaterialVO updateLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException;
+    StudyMaterialVO updateLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request);
 
     @Transactional
-    StudyMaterialVO deleteLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) throws NoSuchFieldException, IllegalAccessException;
+    StudyMaterialVO deleteLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request);
 
     Page<LinkVO> findAllLinksInStudyMaterial(String studyMaterialId, Pageable pageable);
 

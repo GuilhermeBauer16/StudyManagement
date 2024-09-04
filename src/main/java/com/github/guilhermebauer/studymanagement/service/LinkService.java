@@ -30,11 +30,13 @@ public class LinkService implements LinkServiceContract {
 
 
     @Override
-    public List<LinkEntity> create(List<LinkEntity> linkEntities) throws IllegalAccessException {
+    public List<LinkEntity> create(List<LinkEntity> linkEntities) {
 
         List<LinkEntity> savedLinkEntities = new ArrayList<>();
 
         for(LinkEntity linkEntity : linkEntities){
+
+            ValidatorUtils.checkObjectIsNullOrThrowException(linkEntity,LINK_NOT_FOUND, LinkNotFoundException.class);
             LinkEntity linkEntityCreated = LinkEntityFactory.create(linkEntity.getUrl(), linkEntity.getDescription());
             ValidatorUtils.checkFieldNotNullAndNotEmptyOrThrowException(linkEntityCreated,LINK_NOT_FOUND, FieldNotFound.class);
             LinkEntity save = repository.save(linkEntityCreated);
@@ -46,7 +48,7 @@ public class LinkService implements LinkServiceContract {
 
     @Override
     @Transactional
-    public LinkVO update(LinkVO linkVO) throws NoSuchFieldException, IllegalAccessException {
+    public LinkVO update(LinkVO linkVO) {
 
         LinkEntity linkEntity = repository.findById(linkVO.getId()).orElseThrow(() -> new LinkNotFoundException(LINK_NOT_FOUND));
         LinkEntity updatedLinkEntity = ValidatorUtils.updateFieldIfNotNull(linkEntity, linkVO, LINK_NOT_FOUND, LinkNotFoundException.class);
@@ -57,7 +59,7 @@ public class LinkService implements LinkServiceContract {
     }
 
     @Override
-    public LinkVO findLinkById(String id) throws NoSuchFieldException, IllegalAccessException {
+    public LinkVO findLinkById(String id) {
 
         LinkEntity linkEntity = repository.findById(id).orElseThrow(() -> new LinkNotFoundException(LINK_NOT_FOUND));
         return BuildMapper.parseObject(new LinkVO(), linkEntity);
