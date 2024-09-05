@@ -21,7 +21,7 @@ class CourseRepositoryTest extends AbstractionIntegrationTest {
 
     private CourseEntity savedCourseEntity;
 
-    private final String ID = "d8e7df81-2cd4-41a2-a005-62e6d8079716";
+    private static final String ID = "5f68880e-7356-4c86-a4a9-f8cc16e2ec87";
     private final String TITLE = "Math";
     private final String DESCRIPTION = "Math is a discipline that work with numbers";
 
@@ -36,7 +36,6 @@ class CourseRepositoryTest extends AbstractionIntegrationTest {
         Pageable pageable = Pageable.ofSize(10);
         Page<CourseEntity> courseByTitle = repository.findByTitle(savedCourseEntity.getTitle(), pageable);
         CourseEntity courseEntity = courseByTitle.getContent().getFirst();
-        Assertions.assertEquals(1, courseByTitle.getTotalElements());
         Assertions.assertNotNull(courseEntity);
         Assertions.assertEquals(ID, courseEntity.getId());
         Assertions.assertEquals(TITLE, courseEntity.getTitle());

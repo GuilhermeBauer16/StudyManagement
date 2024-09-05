@@ -46,6 +46,7 @@ class CourseTest {
     @InjectMocks
     private CourseService service;
 
+
     private final String ID = "d8e7df81-2cd4-41a2-a005-62e6d8079716";
     private final String TITLE = "Math";
     private final String DESCRIPTION = "Math is a discipline that work with numbers";
@@ -223,6 +224,8 @@ class CourseTest {
         assertEquals(CourseNotFoundException.ERROR.formatErrorMessage(COURSE_NOT_FOUND_MESSAGE), exception.getMessage());
 
     }
+
+
 
 
 }
