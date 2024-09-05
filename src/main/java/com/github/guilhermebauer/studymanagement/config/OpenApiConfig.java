@@ -15,7 +15,8 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Study Management API")
                         .version("v1")
-                        .description("A Study Management API")
+                        .description("A Study Management API allows you to track your progress " +
+                                "and organize your study in a way that suits you best.")
                         .license(
                                 new License()
                                         .name("Apache 2.0")

@@ -151,7 +151,7 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
 
     @Override
     @Transactional
-    public StudyMaterialVO deleteLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request)  {
+    public void deleteLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request)  {
 
         StudyMaterialEntity studyMaterialEntity = repository.findById(request.getId())
                 .orElseThrow(() -> new StudyMaterialNotFoundException(STUDY_MATERIAL_NOT_FOUND));
@@ -169,10 +169,8 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
         }
 
         studyMaterialEntity.setLinks(mutableLinks);
-
         repository.save(studyMaterialEntity);
 
-        return BuildMapper.parseObject(new StudyMaterialVO(), studyMaterialEntity);
     }
 
     public Page<LinkVO> findAllLinksInStudyMaterial(String studyMaterialId, Pageable pageable) {

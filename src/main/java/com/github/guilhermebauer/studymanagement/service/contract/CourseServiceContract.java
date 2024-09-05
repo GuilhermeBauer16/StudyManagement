@@ -55,7 +55,7 @@ public interface CourseServiceContract {
      * @return a pageable list of course responses matching the given title.
      * @throws NoSuchFieldException   if a required field is missing.
      * @throws IllegalAccessException if an access problem occurs.
-     * @see Pageable
+
      */
     Page<CourseResponse> findCourseByTitle(String title, Pageable pageable) throws NoSuchFieldException, IllegalAccessException;
 

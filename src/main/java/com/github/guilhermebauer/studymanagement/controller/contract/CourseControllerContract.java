@@ -149,9 +149,9 @@ public interface CourseControllerContract {
             description = "Deletes a course by its ID.",
             tags = "Courses")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful operation",
+            @ApiResponse(responseCode = "204", description = "Successful operation, will return a not content",
                     content = @Content(schema = @Schema(implementation = CourseResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Course Not Found or Field Not Found",
+            @ApiResponse(responseCode = "404", description = "Course Not Found",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content)
