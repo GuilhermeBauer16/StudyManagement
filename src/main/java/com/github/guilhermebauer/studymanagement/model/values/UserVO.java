@@ -1,7 +1,9 @@
 package com.github.guilhermebauer.studymanagement.model.values;
 
 
-import com.github.guilhermebauer.studymanagement.enums.UserProfile;
+import com.github.guilhermebauer.studymanagement.model.RoleEntity;
+
+import java.util.Set;
 
 public class UserVO {
 
@@ -9,14 +11,14 @@ public class UserVO {
     private String name;
     private String email;
     private String password;
-    private UserProfile userProfile;
+    private Set<RoleEntity> roles;
 
-    public UserVO(String id, String name, String email, String password, UserProfile userProfile) {
+    public UserVO(String id, String name, String email, String password, Set<RoleEntity> roles) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
-        this.userProfile = userProfile;
+        this.roles = roles;
     }
 
     public UserVO() {
@@ -54,12 +56,12 @@ public class UserVO {
         this.password = password;
     }
 
-    public UserProfile getUserProfile() {
-        return userProfile;
+    public Set<RoleEntity> getRoles() {
+        return roles;
     }
 
-    public void setUserProfile(UserProfile userProfile) {
-        this.userProfile = userProfile;
+    public void setRoles(Set<RoleEntity> roles) {
+        this.roles = roles;
     }
 }
 

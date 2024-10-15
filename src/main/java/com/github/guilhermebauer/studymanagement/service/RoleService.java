@@ -13,8 +13,6 @@ import com.github.guilhermebauer.studymanagement.utils.ValidatorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class RoleService implements RoleServiceContract {
 
@@ -34,7 +32,7 @@ public class RoleService implements RoleServiceContract {
 
         checkIfRoleAlreadyRegisteredIntoDatabase(role.getName());
         RoleEntity roleFactory = RoleFactory.create(role.getName().toUpperCase());
-        ValidatorUtils.checkFieldNotNullAndNotEmptyOrThrowException(roleFactory,ROLE_NOT_FOUND, FieldNotFound.class);
+        ValidatorUtils.checkFieldNotNullAndNotEmptyOrThrowException(roleFactory, ROLE_NOT_FOUND, FieldNotFound.class);
         RoleEntity roleEntity = repository.save(roleFactory);
         return BuildMapper.parseObject(new RoleVO(), roleEntity);
     }
@@ -43,14 +41,14 @@ public class RoleService implements RoleServiceContract {
     public RoleVO findRoleByName(String name) {
 
         RoleEntity roleEntity = repository.findByName(ROLE_PREFIX + name.toUpperCase()).orElseThrow(() -> new RoleNotFoundException(ROLE_NOT_FOUND));
+        System.out.println(roleEntity.getId());
+
         return BuildMapper.parseObject(new RoleVO(), roleEntity);
     }
 
 
     private void checkIfRoleAlreadyRegisteredIntoDatabase(String roleName) {
-        boolean present = repository.findByName(ROLE_PREFIX + roleName.toUpperCase()).isPresent();
-        System.out.println(present);
-        if( present) {
+        if (repository.findByName(ROLE_PREFIX + roleName.toUpperCase()).isPresent()) {
             throw new RoleAllReadyRegisterException(ROLE_ALREADY_REGISTER_MESSAGE);
         }
 
