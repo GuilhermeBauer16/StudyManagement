@@ -1,6 +1,8 @@
 package com.github.guilhermebauer.studymanagement.config;
 
 import com.github.guilhermebauer.studymanagement.filters.CsrfCookieFilter;
+import com.github.guilhermebauer.studymanagement.filters.JwtValidationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,10 +25,11 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-    private static final String[] CSRF_IGNORE_REQUEST_MATCHER = {"/api/signUp/**"};
+    private static final String[] CSRF_IGNORE_REQUEST_MATCHER = {"/api/signUp/**","/api/login/**"};
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Autowired
+    SecurityFilterChain securityFilterChain(HttpSecurity http, JwtValidationFilter jwtValidationFilter) throws Exception {
         CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
         requestHandler.setCsrfRequestAttributeName("_csrf");
 
@@ -38,11 +41,13 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(cors -> corsConfigurationSource())
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(jwtValidationFilter, BasicAuthenticationFilter.class)
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
-                                .requestMatchers("/api/signUp").permitAll()
+                                .requestMatchers("/api/signUp",
+                                        "/api/login/**").permitAll()
                                 .anyRequest().permitAll()
 
 //                                .requestMatchers("/api/workoutExercise/**").hasAuthority("ADMIN")
