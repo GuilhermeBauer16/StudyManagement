@@ -22,10 +22,17 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
+
 @Configuration
 public class SecurityConfig {
 
-    private static final String[] CSRF_IGNORE_REQUEST_MATCHER = {"/api/signUp/**","/api/login/**"};
+    private static final String[] CSRF_IGNORE_REQUEST_MATCHER = {"/api/signUp/**", "/api/login/**", "/api/course/**",
+            "/api/studyMaterial/**", "/api/role/**"};
+    private static final String[] USER_RESOURCES = {"/api/course/**", "/api/studyMaterial/**"};
+    private static final String[] ADMIN_RESOURCES = {"/api/role/**"};
+    private static final String ROLE_ADMIN = "ADMIN";
+    private static final String ROLE_USER = "USER";
+
 
     @Bean
     @Autowired
@@ -46,14 +53,10 @@ public class SecurityConfig {
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
-                                .requestMatchers("/api/signUp",
-                                        "/api/login/**").permitAll()
+                                .requestMatchers(ADMIN_RESOURCES).hasRole(ROLE_ADMIN)
+                                .requestMatchers(USER_RESOURCES).hasRole(ROLE_USER)
                                 .anyRequest().permitAll()
 
-//                                .requestMatchers("/api/workoutExercise/**").hasAuthority("ADMIN")
-//                                .requestMatchers("/api/personalizedWorkout/**").hasAnyAuthority("USER", "ADMIN")
-//                                .requestMatchers("/api/**").authenticated()
-//                                .requestMatchers("/users").denyAll()
                 ).formLogin(Customizer.withDefaults())
 
 

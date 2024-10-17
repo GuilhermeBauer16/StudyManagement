@@ -2,12 +2,12 @@ package com.github.guilhermebauer.studymanagement.response;
 
 public class LoginResponse {
 
-
-    private String token;
     private String email;
+    private String token;
 
-    public LoginResponse(String username, String token) {
-        this.email = username;
+
+    public LoginResponse(String email, String token) {
+        this.email = email;
         this.token = token;
     }
 
