@@ -3,6 +3,7 @@ package com.github.guilhermebauer.studymanagement.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,13 @@ import java.util.function.Function;
 public class JwtTokenService {
 
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
-    public static final String JWT_SECRET = "jxgEQe.XHuPq8VdbyYFNkAN.dudQ0903YUn4";
+
+    @Value("${SECRET_KEY}")
+    private String JWT_SECRET;
 
     private Claims getAllClaimsFromToken(String token) {
-        final SecretKey secretKey = Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8));
+        final SecretKey secretKey = Keys.hmacShaKeyFor(
+                JWT_SECRET.getBytes(StandardCharsets.UTF_8));
         return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()

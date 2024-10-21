@@ -24,7 +24,7 @@ public class UserRegistrationController implements UserRegistrationControllerCon
     }
 
     @Override
-    public ResponseEntity<UserRegistrationResponse> createRole(UserVO userVO) {
+    public ResponseEntity<UserRegistrationResponse> createUser(UserVO userVO) {
         UserRegistrationResponse userCreated = userRegistrationService.createUser(userVO);
 
         return new ResponseEntity<>(userCreated, HttpStatus.CREATED);

@@ -11,5 +11,5 @@ public interface UserRegistrationControllerContract {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<UserRegistrationResponse> createRole(@RequestBody UserVO userVO);
+    ResponseEntity<UserRegistrationResponse> createUser(@RequestBody UserVO userVO);
 }

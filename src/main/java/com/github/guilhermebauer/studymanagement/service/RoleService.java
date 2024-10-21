@@ -18,7 +18,7 @@ public class RoleService implements RoleServiceContract {
 
     private final RoleRepository repository;
 
-    private static final String ROLE_NOT_FOUND = "That role does not exist or was not found in the database!";
+    private static final String ROLE_NOT_FOUND_MESSAGE = "That role does not exist or was not found in the database!";
     private static final String ROLE_ALREADY_REGISTER_MESSAGE = "A role with that name was registered in the database!";
     private static final String ROLE_PREFIX = "ROLE_";
 
@@ -32,7 +32,7 @@ public class RoleService implements RoleServiceContract {
 
         checkIfRoleAlreadyRegisteredIntoDatabase(role.getName());
         RoleEntity roleFactory = RoleFactory.create(role.getName().toUpperCase());
-        ValidatorUtils.checkFieldNotNullAndNotEmptyOrThrowException(roleFactory, ROLE_NOT_FOUND, FieldNotFound.class);
+        ValidatorUtils.checkFieldNotNullAndNotEmptyOrThrowException(roleFactory, ROLE_NOT_FOUND_MESSAGE, FieldNotFound.class);
         RoleEntity roleEntity = repository.save(roleFactory);
         return BuildMapper.parseObject(new RoleVO(), roleEntity);
     }
@@ -40,9 +40,7 @@ public class RoleService implements RoleServiceContract {
     @Override
     public RoleVO findRoleByName(String name) {
 
-        RoleEntity roleEntity = repository.findByName(ROLE_PREFIX + name.toUpperCase()).orElseThrow(() -> new RoleNotFoundException(ROLE_NOT_FOUND));
-        System.out.println(roleEntity.getId());
-
+        RoleEntity roleEntity = repository.findByName(ROLE_PREFIX + name.toUpperCase()).orElseThrow(() -> new RoleNotFoundException(ROLE_NOT_FOUND_MESSAGE));
         return BuildMapper.parseObject(new RoleVO(), roleEntity);
     }
 
@@ -53,6 +51,8 @@ public class RoleService implements RoleServiceContract {
         }
 
     }
+
+
 
 
 }

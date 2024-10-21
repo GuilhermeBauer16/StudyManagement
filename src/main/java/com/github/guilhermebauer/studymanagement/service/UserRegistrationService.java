@@ -47,7 +47,7 @@ public class UserRegistrationService  implements UserRegistrationServiceContract
         userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
         checkIfEmailAlreadyRegistered(userVO.getEmail());
         UserEntity userFactory = UserFactory.create(userVO.getName(),userVO.getEmail(),userVO.getPassword(),retrieveRoles(userVO.getRoles()));
-        ValidatorUtils.checkObjectIsNullOrThrowException(userFactory,USER_NOT_FOUND_MESSAGE, FieldNotFound.class);
+        ValidatorUtils.checkFieldNotNullAndNotEmptyOrThrowException(userFactory,USER_NOT_FOUND_MESSAGE, FieldNotFound.class);
         UserEntity userEntity = userRepository.save(userFactory);
 
         return BuildMapper.parseObject(new UserRegistrationResponse(),userEntity);
