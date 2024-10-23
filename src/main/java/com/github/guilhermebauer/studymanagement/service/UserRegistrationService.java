@@ -2,7 +2,6 @@ package com.github.guilhermebauer.studymanagement.service;
 
 import com.github.guilhermebauer.studymanagement.exception.EmailAllReadyRegisterException;
 import com.github.guilhermebauer.studymanagement.exception.FieldNotFound;
-import com.github.guilhermebauer.studymanagement.exception.RoleAllReadyRegisterException;
 import com.github.guilhermebauer.studymanagement.exception.UserNotFoundException;
 import com.github.guilhermebauer.studymanagement.factory.UserFactory;
 import com.github.guilhermebauer.studymanagement.mapper.BuildMapper;
