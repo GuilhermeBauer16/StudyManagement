@@ -5,7 +5,7 @@ security:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/${DB_NAME}?useTimezone=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:${DB_PORT}/${DB_NAME}?useTimezone=true&serverTimezone=UTC
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
@@ -16,8 +16,3 @@ spring:
 
     show-sql: false
 
-  logging:
-    level:
-      org.springframework.security: DEBUG
-  main:
-    allow-bean-definition-overriding: true

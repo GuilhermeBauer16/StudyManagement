@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/studyMaterial")
+@RequestMapping("/api/studyMaterial")
 public class StudyMaterialController implements StudyMaterialControllerContract {
 
     private final StudyMaterialService service;

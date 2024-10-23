@@ -2,10 +2,14 @@ package com.github.guilhermebauer.studymanagement.handler;
 
 
 import com.github.guilhermebauer.studymanagement.exception.CourseNotFoundException;
+import com.github.guilhermebauer.studymanagement.exception.EmailAllReadyRegisterException;
 import com.github.guilhermebauer.studymanagement.exception.ExceptionResponse;
 import com.github.guilhermebauer.studymanagement.exception.FieldNotFound;
 import com.github.guilhermebauer.studymanagement.exception.LinkNotFoundException;
+import com.github.guilhermebauer.studymanagement.exception.RoleAllReadyRegisterException;
+import com.github.guilhermebauer.studymanagement.exception.RoleNotFoundException;
 import com.github.guilhermebauer.studymanagement.exception.StudyMaterialNotFoundException;
+import com.github.guilhermebauer.studymanagement.exception.UserNotFoundException;
 import com.github.guilhermebauer.studymanagement.exception.UuidUtilsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +28,9 @@ public class CustomizedResponseEntityExceptionHandler {
             FieldNotFound.class,
             CourseNotFoundException.class,
             StudyMaterialNotFoundException.class,
-            LinkNotFoundException.class
+            LinkNotFoundException.class,
+            RoleNotFoundException.class,
+            UserNotFoundException.class,
 
     })
     public final ResponseEntity<ExceptionResponse> handlerNotFoundException(
@@ -40,7 +46,9 @@ public class CustomizedResponseEntityExceptionHandler {
 
     }
 
-    @ExceptionHandler({UuidUtilsException.class,})
+    @ExceptionHandler({UuidUtilsException.class,
+    RoleAllReadyRegisterException.class,
+    EmailAllReadyRegisterException.class})
     public final ResponseEntity<ExceptionResponse> handlerInternalServerErrorException(
             Exception ex,
             WebRequest webRequest
