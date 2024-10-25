@@ -26,7 +26,9 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-    private static final String[] CSRF_IGNORE_REQUEST_MATCHER = {"/api/signUp/**", "/api/login/**"};
+//    private static final String[] CSRF_IGNORE_REQUEST_MATCHER = {"/api/signUp/**", "/api/login/**"};
+    private static final String[] CSRF_IGNORE_REQUEST_MATCHER = {"/api/signUp/**", "/api/login/**", "/api/course/**",
+        "/api/studyMaterial/**", "/api/role/**"};
     private static final String[] USER_RESOURCES = {"/api/course/**", "/api/studyMaterial/**"};
     private static final String[] ADMIN_RESOURCES = {"/api/role/**"};
     private static final String ROLE_ADMIN = "ADMIN";
