@@ -2,6 +2,13 @@ package com.github.guilhermebauer.studymanagement.controller.contract;
 
 import com.github.guilhermebauer.studymanagement.model.RoleEntity;
 import com.github.guilhermebauer.studymanagement.model.values.RoleVO;
+import com.github.guilhermebauer.studymanagement.model.values.StudyMaterialVO;
+import com.github.guilhermebauer.studymanagement.service.UserRegistrationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +42,19 @@ public interface RoleControllerContract {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Register a new Role",
+            description = "Creates a new Role and returns the created role object.",
+            tags = "role")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Successful operation",
+                    content = @Content(schema = @Schema(implementation = RoleVO.class))),
+            @ApiResponse(responseCode = "400", description = "Role All Ready Register Exception when the role name is duplicated.",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Role Not Found or Field Not Found",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content)
+    })
     ResponseEntity<RoleVO> createRole(@RequestBody RoleVO role);
 
     /**
@@ -50,5 +70,16 @@ public interface RoleControllerContract {
      */
 
     @GetMapping(value="/findByRoleName/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Find role by name",
+            description = "Find role by name, the role will be retrieved by name",
+            tags = "role")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation",
+                    content = @Content(schema = @Schema(implementation = RoleVO.class))),
+            @ApiResponse(responseCode = "404", description = "Role Not Found",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content)
+    })
     ResponseEntity<RoleVO> findRoleByName(@PathVariable(value = "name") String name);
 }

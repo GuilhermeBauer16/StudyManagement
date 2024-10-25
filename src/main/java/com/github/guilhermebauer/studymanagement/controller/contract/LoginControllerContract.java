@@ -2,11 +2,16 @@ package com.github.guilhermebauer.studymanagement.controller.contract;
 
 import com.github.guilhermebauer.studymanagement.request.LoginRequest;
 import com.github.guilhermebauer.studymanagement.response.LoginResponse;
+import com.github.guilhermebauer.studymanagement.service.LoginService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import com.github.guilhermebauer.studymanagement.service.LoginService;
 
 /**
  * API endpoint contract for user login operations.
@@ -36,5 +41,18 @@ public interface LoginControllerContract {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Do a login",
+            description = "Do a login and return an JWT token if was success",
+            tags = "login")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation",
+                    content = @Content(schema = @Schema(implementation = LoginResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Will throw BadCredentialsException",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "User Not Found",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content)
+    })
     ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request);
 }

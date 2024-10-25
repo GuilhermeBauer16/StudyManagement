@@ -1,7 +1,13 @@
 package com.github.guilhermebauer.studymanagement.controller.contract;
 
+import com.github.guilhermebauer.studymanagement.model.values.StudyMaterialVO;
 import com.github.guilhermebauer.studymanagement.model.values.UserVO;
 import com.github.guilhermebauer.studymanagement.response.UserRegistrationResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,5 +41,18 @@ public interface UserRegistrationControllerContract {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Register a new User",
+            description = "Creates a new User and returns the created user object.",
+            tags = "user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Successful operation",
+                    content = @Content(schema = @Schema(implementation = UserRegistrationService.class))),
+            @ApiResponse(responseCode = "400", description = "Email All Ready Registered Exception when the email is duplicated.",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "User Not Found or Field Not Found",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content)
+    })
     ResponseEntity<UserRegistrationResponse> createUser(@RequestBody UserVO userVO);
 }

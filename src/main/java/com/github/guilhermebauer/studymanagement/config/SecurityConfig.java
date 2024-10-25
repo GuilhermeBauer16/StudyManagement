@@ -26,8 +26,7 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-    private static final String[] CSRF_IGNORE_REQUEST_MATCHER = {"/api/signUp/**", "/api/login/**", "/api/course/**",
-            "/api/studyMaterial/**", "/api/role/**"};
+    private static final String[] CSRF_IGNORE_REQUEST_MATCHER = {"/api/signUp/**", "/api/login/**"};
     private static final String[] USER_RESOURCES = {"/api/course/**", "/api/studyMaterial/**"};
     private static final String[] ADMIN_RESOURCES = {"/api/role/**"};
     private static final String ROLE_ADMIN = "ADMIN";
@@ -73,7 +72,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowedMethods(List.of("*"));
-        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource =
                 new UrlBasedCorsConfigurationSource();
