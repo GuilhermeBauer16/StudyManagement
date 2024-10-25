@@ -45,6 +45,7 @@
 			**/enums/**,
 			**/exception/**,
 			**/factory/**,
+			**/filters/**,
 			**/handler/**,
 			**/model/**,
 			**/response/**,

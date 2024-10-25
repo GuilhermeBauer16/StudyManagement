@@ -17,14 +17,18 @@ import java.util.function.Function;
 @Service
 public class JwtTokenService {
 
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    public static final long JWT_TOKEN_VALIDITY = 180000L;
 
-    @Value("${SECRET_KEY}")
-    private String JWT_SECRET;
+
+    private final String secret;
+
+    public JwtTokenService(@Value("${SECRET_KEY}") String jwtSecret) {
+        secret = jwtSecret;
+    }
 
     private Claims getAllClaimsFromToken(String token) {
         final SecretKey secretKey = Keys.hmacShaKeyFor(
-                JWT_SECRET.getBytes(StandardCharsets.UTF_8));
+                secret.getBytes(StandardCharsets.UTF_8));
         return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
@@ -55,7 +59,7 @@ public class JwtTokenService {
     }
 
     private String getToken(Map<String, String> claims, String subject) {
-        final SecretKey secretKey = Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8));
+        final SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 
         return Jwts.builder()
                 .claims(claims)
