@@ -8,7 +8,6 @@ import com.github.guilhermebauer.studymanagement.config.TestConfigs;
 import com.github.guilhermebauer.studymanagement.model.RoleEntity;
 import com.github.guilhermebauer.studymanagement.model.UserEntity;
 import com.github.guilhermebauer.studymanagement.model.values.RoleVO;
-import com.github.guilhermebauer.studymanagement.repository.RoleRepository;
 import com.github.guilhermebauer.studymanagement.repository.UserRepository;
 import com.github.guilhermebauer.studymanagement.request.LoginRequest;
 import com.github.guilhermebauer.studymanagement.response.LoginResponse;
@@ -47,7 +46,6 @@ public class RoleControllerTest extends AbstractionIntegrationTest {
     private static RoleVO roleVO;
 
 
-
     private static final String ID = "d8e7df81-2cd4-41a2-a005-62e6d8079716";
     private static final String ROLE_NAME = "TEST";
     private static final String USER_NAME = "john";
@@ -56,16 +54,16 @@ public class RoleControllerTest extends AbstractionIntegrationTest {
     private static final String USER_ROLE = "ROLE_ADMIN";
     private static final String BEARER_PREFIX = "Bearer ";
     private static final String ROLE_PREFIX = "ROLE_";
+    private static final Set<RoleEntity> ROLES = new HashSet<>(Set.of(new RoleEntity(ID, USER_ROLE)));
 
     @BeforeAll
-    public static void setup(@Autowired RoleRepository roleRepository,
-                             @Autowired UserRepository userRepository,
-                             @Autowired PasswordEncoder passwordEncoder) {
+    public static void setup(
+            @Autowired UserRepository userRepository,
+            @Autowired PasswordEncoder passwordEncoder) {
         objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-        RoleEntity roleEntity = roleRepository.save(new RoleEntity(ID, USER_ROLE));
-        UserEntity userEntity = new UserEntity(ID, USER_NAME, EMAIL, passwordEncoder.encode(PASSWORD), new HashSet<>(Set.of(roleEntity)));
+        UserEntity userEntity = new UserEntity(ID, USER_NAME, EMAIL, passwordEncoder.encode(PASSWORD), ROLES);
         userEntity = userRepository.save(userEntity);
         roleVO = new RoleVO(ID, ROLE_NAME);
 
@@ -151,7 +149,6 @@ public class RoleControllerTest extends AbstractionIntegrationTest {
         Assertions.assertTrue(roleValue.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
 
         assertEquals(ROLE_PREFIX + ROLE_NAME, roleValue.getName());
-
 
 
     }

@@ -15,7 +15,6 @@ import com.github.guilhermebauer.studymanagement.model.values.LinkVO;
 import com.github.guilhermebauer.studymanagement.model.values.StudyMaterialVO;
 import com.github.guilhermebauer.studymanagement.repository.CourseRepository;
 import com.github.guilhermebauer.studymanagement.repository.LinkRepository;
-import com.github.guilhermebauer.studymanagement.repository.RoleRepository;
 import com.github.guilhermebauer.studymanagement.repository.StudyMaterialRepository;
 import com.github.guilhermebauer.studymanagement.repository.UserRepository;
 import com.github.guilhermebauer.studymanagement.request.LinkListToStudyMaterialRequest;
@@ -78,12 +77,12 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
     private static final String PASSWORD = "123456";
     private static final String USER_ROLE = "ROLE_USER";
     private static final String BEARER_PREFIX = "Bearer ";
+    private static final Set<RoleEntity> ROLES = new HashSet<>(Set.of(new RoleEntity(ID, USER_ROLE)));
 
     @BeforeAll
     static void SetUp(@Autowired CourseRepository courseRepository,
                       @Autowired LinkRepository linkRepository,
                       @Autowired StudyMaterialRepository studyMaterialRepository,
-                      @Autowired RoleRepository roleRepository,
                       @Autowired UserRepository userRepository,
                       @Autowired PasswordEncoder passwordEncoder) {
 
@@ -108,8 +107,7 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
 
         studyMaterialRepository.save(studyMaterialEntity);
 
-        RoleEntity roleEntity = roleRepository.save(new RoleEntity(ID, USER_ROLE));
-        UserEntity userEntity = new UserEntity(ID, USER_NAME, EMAIL, passwordEncoder.encode(PASSWORD), new HashSet<>(Set.of(roleEntity)));
+        UserEntity userEntity = new UserEntity(ID, USER_NAME, EMAIL, passwordEncoder.encode(PASSWORD), ROLES);
         userEntity = userRepository.save(userEntity);
 
 
@@ -176,7 +174,6 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
         assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
 
 
-
         studyMaterialVO.setId(studyMaterialVOResponse.getId());
 
     }
@@ -207,7 +204,6 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
         assertEquals(COURSE_DESCRIPTION, studyMaterialVOResponse.getCourseEntity().getDescription());
         assertEquals(URL, studyMaterialVOResponse.getLinks().getFirst().getUrl());
         assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
-
 
 
     }
@@ -242,7 +238,6 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
         assertEquals(COURSE_DESCRIPTION, studyMaterialVOResponse.getCourseEntity().getDescription());
         assertEquals(URL, studyMaterialVOResponse.getLinks().getFirst().getUrl());
         assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
-
 
 
     }
@@ -376,7 +371,7 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
 
     @Test
     @Order(9)
-    void givenStudyMaterialObject_when_DeleteALink_ShouldReturnNoContent(){
+    void givenStudyMaterialObject_when_DeleteALink_ShouldReturnNoContent() {
 
         given().spec(specification)
                 .contentType(TestConfigs.CONTENT_TYPE_JSON)

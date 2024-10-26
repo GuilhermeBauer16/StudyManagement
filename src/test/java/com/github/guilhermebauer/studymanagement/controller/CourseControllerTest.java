@@ -9,7 +9,6 @@ import com.github.guilhermebauer.studymanagement.config.TestConfigs;
 import com.github.guilhermebauer.studymanagement.model.RoleEntity;
 import com.github.guilhermebauer.studymanagement.model.UserEntity;
 import com.github.guilhermebauer.studymanagement.model.values.CourseVO;
-import com.github.guilhermebauer.studymanagement.repository.RoleRepository;
 import com.github.guilhermebauer.studymanagement.repository.UserRepository;
 import com.github.guilhermebauer.studymanagement.request.LoginRequest;
 import com.github.guilhermebauer.studymanagement.response.CourseResponse;
@@ -44,8 +43,9 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(classes = StudymanagementApplication.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
-class CourseControllerTest extends AbstractionIntegrationTest {
 
+
+class CourseControllerTest extends AbstractionIntegrationTest {
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
@@ -53,28 +53,26 @@ class CourseControllerTest extends AbstractionIntegrationTest {
 
     private static final String ID = "cb1a4d81-27d3-443f-be22-e17c52c83ed8";
     private static final String TITLE = "Math";
-    private static final String DESCRIPTION = "Math is a discipline that work with numbers";
-    private static final String UPDATED_DESCRIPTION = "Physical is a discipline that work with numbers";
-    private static final String UPDATED_TITLE = "Physical";
+    private static final String DESCRIPTION = "Math is a discipline that works with numbers";
+    private static final String UPDATED_DESCRIPTION = "Physics is a discipline that works with numbers";
+    private static final String UPDATED_TITLE = "Physics";
 
     private static final String USER_NAME = "john";
     private static final String EMAIL = "jonhDoe@gmail.com";
     private static final String PASSWORD = "123456";
     private static final String USER_ROLE = "ROLE_USER";
     private static final String BEARER_PREFIX = "Bearer ";
-
+    private static final Set<RoleEntity> ROLES = new HashSet<>(Set.of(new RoleEntity(ID, USER_ROLE)));
 
     @BeforeAll
-    static void SetUp(@Autowired RoleRepository roleRepository, @Autowired UserRepository userRepository, @Autowired PasswordEncoder passwordEncoder) {
+    static void setUp(@Autowired UserRepository userRepository, @Autowired PasswordEncoder passwordEncoder) {
         objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
         courseVO = new CourseVO(ID, TITLE, DESCRIPTION);
-        RoleEntity roleEntity = roleRepository.save(new RoleEntity(ID, USER_ROLE));
-        UserEntity userEntity = new UserEntity(ID, USER_NAME, EMAIL, passwordEncoder.encode(PASSWORD), new HashSet<>(Set.of(roleEntity)));
-        userEntity = userRepository.save(userEntity);
+        UserEntity userEntity = new UserEntity(ID, USER_NAME, EMAIL, passwordEncoder.encode(PASSWORD), ROLES);
+        userRepository.save(userEntity);
     }
-
 
     @Test
     @Order(1)
@@ -95,21 +93,19 @@ class CourseControllerTest extends AbstractionIntegrationTest {
                 .extract()
                 .body().as(LoginResponse.class).getToken();
 
-
         specification = new RequestSpecBuilder()
                 .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, BEARER_PREFIX + accessToken)
                 .setBaseUri("http://localhost:" + TestConfigs.SERVER_PORT)
                 .setBasePath("/api/course")
+                .disableCsrf()
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
-
     }
-
 
     @Test
     @Order(2)
-    void givenCourseObject_when_CreateCourse_ShouldReturnACourseObject() throws IOException {
+    void givenCourseObject_whenCreateCourse_ShouldReturnCourseObject() throws IOException {
 
         var content = given().spec(specification)
                 .contentType(TestConfigs.CONTENT_TYPE_JSON)
@@ -122,7 +118,6 @@ class CourseControllerTest extends AbstractionIntegrationTest {
                 .body()
                 .asString();
 
-
         CourseResponse courseResponse = objectMapper.readValue(content, CourseResponse.class);
 
         Assertions.assertNotNull(courseResponse);
@@ -133,8 +128,8 @@ class CourseControllerTest extends AbstractionIntegrationTest {
         assertEquals(DESCRIPTION, courseResponse.getDescription());
 
         courseVO.setId(courseResponse.getId());
-
     }
+
 
     @Test
     @Order(3)
