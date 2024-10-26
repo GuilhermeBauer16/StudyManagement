@@ -8,15 +8,20 @@ import com.github.guilhermebauer.studymanagement.StudymanagementApplication;
 import com.github.guilhermebauer.studymanagement.config.TestConfigs;
 import com.github.guilhermebauer.studymanagement.model.CourseEntity;
 import com.github.guilhermebauer.studymanagement.model.LinkEntity;
+import com.github.guilhermebauer.studymanagement.model.RoleEntity;
 import com.github.guilhermebauer.studymanagement.model.StudyMaterialEntity;
+import com.github.guilhermebauer.studymanagement.model.UserEntity;
 import com.github.guilhermebauer.studymanagement.model.values.LinkVO;
 import com.github.guilhermebauer.studymanagement.model.values.StudyMaterialVO;
 import com.github.guilhermebauer.studymanagement.repository.CourseRepository;
 import com.github.guilhermebauer.studymanagement.repository.LinkRepository;
 import com.github.guilhermebauer.studymanagement.repository.StudyMaterialRepository;
+import com.github.guilhermebauer.studymanagement.repository.UserRepository;
 import com.github.guilhermebauer.studymanagement.request.LinkListToStudyMaterialRequest;
+import com.github.guilhermebauer.studymanagement.request.LoginRequest;
 import com.github.guilhermebauer.studymanagement.request.SingleLinkToStudyMaterialRequest;
 import com.github.guilhermebauer.studymanagement.request.StudyMaterialUpdateRequest;
+import com.github.guilhermebauer.studymanagement.response.LoginResponse;
 import com.github.guilhermebauer.studymanagement.response.StudyMaterialUpdateResponse;
 import com.github.guilhermebauer.studymanagement.testContainers.AbstractionIntegrationTest;
 import com.github.guilhermebauer.studymanagement.utils.PaginatedResponse;
@@ -34,9 +39,12 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -64,19 +72,22 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
     private static final String COURSE_TITLE = "Math";
     private static final String COURSE_DESCRIPTION = "Math is a discipline that work with numbers";
 
+    private static final String USER_NAME = "john";
+    private static final String EMAIL = "jonhLee@gmail.com";
+    private static final String PASSWORD = "123456";
+    private static final String USER_ROLE = "ROLE_USER";
+    private static final String BEARER_PREFIX = "Bearer ";
+    private static final Set<RoleEntity> ROLES = new HashSet<>(Set.of(new RoleEntity(ID, USER_ROLE)));
+
     @BeforeAll
     static void SetUp(@Autowired CourseRepository courseRepository,
                       @Autowired LinkRepository linkRepository,
-                      @Autowired StudyMaterialRepository studyMaterialRepository) {
+                      @Autowired StudyMaterialRepository studyMaterialRepository,
+                      @Autowired UserRepository userRepository,
+                      @Autowired PasswordEncoder passwordEncoder) {
+
         objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
-        specification = new RequestSpecBuilder()
-                .setBasePath("/studyMaterial")
-                .setPort(TestConfigs.SERVER_PORT)
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
-                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-                .build();
 
 
         LinkEntity linkEntity = new LinkEntity(ID, URL, DESCRIPTION);
@@ -96,12 +107,45 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
 
         studyMaterialRepository.save(studyMaterialEntity);
 
+        UserEntity userEntity = new UserEntity(ID, USER_NAME, EMAIL, passwordEncoder.encode(PASSWORD), ROLES);
+        userEntity = userRepository.save(userEntity);
+
+
+    }
+
+    @Test
+    @Order(1)
+    void authorization() {
+        LoginRequest loginRequest = new LoginRequest(EMAIL, PASSWORD);
+
+        var accessToken = given()
+                .basePath("/api/login")
+                .port(TestConfigs.SERVER_PORT)
+                .contentType(TestConfigs.CONTENT_TYPE_JSON)
+                .body(loginRequest)
+                .filter(new RequestLoggingFilter(LogDetail.ALL))
+                .filter(new ResponseLoggingFilter(LogDetail.ALL))
+                .when()
+                .post()
+                .then()
+                .statusCode(200)
+                .extract()
+                .body().as(LoginResponse.class).getToken();
+
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, BEARER_PREFIX + accessToken)
+                .setBaseUri("http://localhost:" + TestConfigs.SERVER_PORT)
+                .setBasePath("/api/studyMaterial")
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
 
     }
 
 
     @Test
-    @Order(1)
+    @Order(2)
     void givenStudyMaterialObject_when_CreateStudyMaterial_ShouldReturnAStudyMaterialObject() throws IOException {
 
         var content = given().spec(specification)
@@ -130,13 +174,12 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
         assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
 
 
-
         studyMaterialVO.setId(studyMaterialVOResponse.getId());
 
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     void givenStudyMaterialObject_when_FindStudyMaterialById_ShouldReturnAStudyMaterialObject() throws JsonProcessingException {
 
         var content = given().spec(specification)
@@ -163,11 +206,10 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
         assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
 
 
-
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     void givenStudyMaterialList_when_FindAllStudyMaterial_ShouldReturnAStudyMaterialList() throws JsonProcessingException {
 
         var content = given().spec(specification)
@@ -198,12 +240,11 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
         assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
 
 
-
     }
 
 
     @Test
-    @Order(4)
+    @Order(5)
     void givenStudyMaterialObject_when_AddLink_ShouldReturnAStudyMaterialObject() throws JsonProcessingException {
 
         var content = given().spec(specification)
@@ -235,7 +276,7 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     void givenStudyMaterialObject_when_FindAllLinks_ShouldReturnALinkList() throws JsonProcessingException {
 
         var content = given().spec(specification)
@@ -267,7 +308,7 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     void givenStudyMaterialObject_when_UpdateALink_ShouldReturnAStudyMaterialObject() throws JsonProcessingException {
 
         var content = given().spec(specification)
@@ -299,7 +340,7 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
 
 
     @Test
-    @Order(7)
+    @Order(8)
     void givenStudyMaterialUpdateRequest_when_UpdateAStudyMaterial_ShouldReturnUpdatedStudyMaterial() throws IOException {
 
         studyMaterialUpdateRequest.setContent("A Spring Boot guide");
@@ -329,8 +370,8 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
     }
 
     @Test
-    @Order(8)
-    void givenStudyMaterialObject_when_DeleteALink_ShouldReturnNoContent(){
+    @Order(9)
+    void givenStudyMaterialObject_when_DeleteALink_ShouldReturnNoContent() {
 
         given().spec(specification)
                 .contentType(TestConfigs.CONTENT_TYPE_JSON)
@@ -346,7 +387,7 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
 
     }
 
-    @Order(9)
+    @Order(10)
     @Test
     void givenPersonalizedWorkoutExercise_when_delete_ShouldReturnNoContent() {
 
