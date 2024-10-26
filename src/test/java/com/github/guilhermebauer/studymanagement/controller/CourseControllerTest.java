@@ -6,8 +6,13 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.guilhermebauer.studymanagement.StudymanagementApplication;
 import com.github.guilhermebauer.studymanagement.config.TestConfigs;
+import com.github.guilhermebauer.studymanagement.model.RoleEntity;
+import com.github.guilhermebauer.studymanagement.model.UserEntity;
 import com.github.guilhermebauer.studymanagement.model.values.CourseVO;
+import com.github.guilhermebauer.studymanagement.repository.UserRepository;
+import com.github.guilhermebauer.studymanagement.request.LoginRequest;
 import com.github.guilhermebauer.studymanagement.response.CourseResponse;
+import com.github.guilhermebauer.studymanagement.response.LoginResponse;
 import com.github.guilhermebauer.studymanagement.testContainers.AbstractionIntegrationTest;
 import com.github.guilhermebauer.studymanagement.utils.PaginatedResponse;
 import io.restassured.builder.RequestSpecBuilder;
@@ -21,11 +26,15 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,39 +43,69 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(classes = StudymanagementApplication.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
-class CourseControllerTest extends AbstractionIntegrationTest {
 
+
+class CourseControllerTest extends AbstractionIntegrationTest {
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
     private static CourseVO courseVO;
 
-    private static final String ID = "d8e7df81-2cd4-41a2-a005-62e6d8079716";
+    private static final String ID = "cb1a4d81-27d3-443f-be22-e17c52c83ed8";
     private static final String TITLE = "Math";
-    private static final String DESCRIPTION = "Math is a discipline that work with numbers";
+    private static final String DESCRIPTION = "Math is a discipline that works with numbers";
+    private static final String UPDATED_DESCRIPTION = "Physics is a discipline that works with numbers";
+    private static final String UPDATED_TITLE = "Physics";
+
+    private static final String USER_NAME = "john";
+    private static final String EMAIL = "jonhDoe@gmail.com";
+    private static final String PASSWORD = "123456";
+    private static final String USER_ROLE = "ROLE_USER";
+    private static final String BEARER_PREFIX = "Bearer ";
+    private static final Set<RoleEntity> ROLES = new HashSet<>(Set.of(new RoleEntity(ID, USER_ROLE)));
 
     @BeforeAll
-    static void SetUp() {
+    static void setUp(@Autowired UserRepository userRepository, @Autowired PasswordEncoder passwordEncoder) {
         objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-        specification = new RequestSpecBuilder()
-                .setBasePath("/course")
-                .setPort(TestConfigs.SERVER_PORT)
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
-                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-                .build();
-
         courseVO = new CourseVO(ID, TITLE, DESCRIPTION);
+        UserEntity userEntity = new UserEntity(ID, USER_NAME, EMAIL, passwordEncoder.encode(PASSWORD), ROLES);
+        userRepository.save(userEntity);
     }
-
-
-
-
 
     @Test
     @Order(1)
-    void givenCourseObject_when_CreateCourse_ShouldReturnACourseObject() throws IOException {
+    void authorization() {
+        LoginRequest loginRequest = new LoginRequest(EMAIL, PASSWORD);
+
+        var accessToken = given()
+                .basePath("/api/login")
+                .port(TestConfigs.SERVER_PORT)
+                .contentType(TestConfigs.CONTENT_TYPE_JSON)
+                .body(loginRequest)
+                .filter(new RequestLoggingFilter(LogDetail.ALL))
+                .filter(new ResponseLoggingFilter(LogDetail.ALL))
+                .when()
+                .post()
+                .then()
+                .statusCode(200)
+                .extract()
+                .body().as(LoginResponse.class).getToken();
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, BEARER_PREFIX + accessToken)
+                .setBaseUri("http://localhost:" + TestConfigs.SERVER_PORT)
+                .setBasePath("/api/course")
+                .disableCsrf()
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+    }
+
+    @Test
+    @Order(2)
+    void givenCourseObject_whenCreateCourse_ShouldReturnCourseObject() throws IOException {
 
         var content = given().spec(specification)
                 .contentType(TestConfigs.CONTENT_TYPE_JSON)
@@ -79,7 +118,6 @@ class CourseControllerTest extends AbstractionIntegrationTest {
                 .body()
                 .asString();
 
-
         CourseResponse courseResponse = objectMapper.readValue(content, CourseResponse.class);
 
         Assertions.assertNotNull(courseResponse);
@@ -90,12 +128,13 @@ class CourseControllerTest extends AbstractionIntegrationTest {
         assertEquals(DESCRIPTION, courseResponse.getDescription());
 
         courseVO.setId(courseResponse.getId());
-
     }
 
+
     @Test
-    @Order(2)
+    @Order(3)
     void givenCourseObject_when_FindCourseById_ShouldReturnACourseObject() throws JsonProcessingException {
+
 
         var content = given().spec(specification)
                 .pathParam("id", courseVO.getId())
@@ -120,7 +159,7 @@ class CourseControllerTest extends AbstractionIntegrationTest {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     void givenCourseList_when_FindAllCourses_ShouldReturnACourseList() throws JsonProcessingException {
 
         var content = given().spec(specification)
@@ -150,7 +189,7 @@ class CourseControllerTest extends AbstractionIntegrationTest {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     void givenFindByTitle_whenCourseWasFound_ShouldReturnAPageableOfCourse() throws JsonProcessingException {
 
         var content = given().spec(specification)
@@ -182,11 +221,11 @@ class CourseControllerTest extends AbstractionIntegrationTest {
 
 
     @Test
-    @Order(5)
+    @Order(6)
     void GivenCourseObject_when_UpdateCourse_ShouldReturnACourseObject() throws IOException {
 
-        courseVO.setTitle("Physical");
-        courseVO.setDescription("Physical is a discipline that work with numbers");
+        courseVO.setTitle(UPDATED_TITLE);
+        courseVO.setDescription(UPDATED_DESCRIPTION);
 
         var content = given().spec(specification)
                 .contentType(TestConfigs.CONTENT_TYPE_JSON)
@@ -205,11 +244,11 @@ class CourseControllerTest extends AbstractionIntegrationTest {
         Assertions.assertNotNull(courseResponse.getId());
         Assertions.assertTrue(courseResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
 
-        assertEquals("Physical", courseResponse.getTitle());
-        assertEquals("Physical is a discipline that work with numbers", courseResponse.getDescription());
+        assertEquals(UPDATED_TITLE, courseResponse.getTitle());
+        assertEquals(UPDATED_DESCRIPTION, courseResponse.getDescription());
     }
 
-    @Order(6)
+    @Order(7)
     @Test
     void givenPersonalizedWorkoutExercise_when_delete_ShouldReturnNoContent() {
 

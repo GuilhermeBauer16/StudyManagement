@@ -32,6 +32,7 @@
 		<model-mapper.version>3.1.1</model-mapper.version>
 		<jacoco.plugin.version>0.8.9</jacoco.plugin.version>
 		<testcontainers.version>1.19.8</testcontainers.version>
+		<jwt.version>0.12.3</jwt.version>
 
 		<sonar.projectKey>GuilhermeBauer16_StudyManagement</sonar.projectKey>
 		<sonar.organization>guilhermebauer16</sonar.organization>
@@ -44,16 +45,54 @@
 			**/enums/**,
 			**/exception/**,
 			**/factory/**,
+			**/filters/**,
 			**/handler/**,
 			**/model/**,
 			**/response/**,
 			**/request/**,
 			**/mapper/**,
+			**/utils/PaginatedResponse.java,
+			**/controller/UserRegistrationController.java,
+			**/service/JwtTokenService.java,
 			**/com/github/guilhermebauer/studymanagement/StudymanagementApplication.java
 
 		</sonar.coverage.exclusions>
 	</properties>
 	<dependencies>
+
+
+		<!-- Spring Security-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<!-- JWT dependencies -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>${jwt.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>${jwt.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>${jwt.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+
 		<!-- Database dependencies-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
