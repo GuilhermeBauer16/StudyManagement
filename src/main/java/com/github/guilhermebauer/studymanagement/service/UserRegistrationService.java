@@ -23,7 +23,7 @@ import java.util.Set;
 @Service
 public class UserRegistrationService  implements UserRegistrationServiceContract {
 
-    private static final String USER_NOT_FOUND_MESSAGE = "That User was not found";
+    private static final String USER_NOT_FOUND_MESSAGE = "That User was not found!";
     private static final String EMAIL_ALREADY_REGISTER_MESSAGE = "The email %s is already registered for another user!";
 
 
