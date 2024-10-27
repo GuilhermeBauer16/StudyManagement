@@ -3,7 +3,9 @@ package com.github.guilhermebauer.studymanagement.service;
 import com.github.guilhermebauer.studymanagement.exception.StudyMaterialNotFoundException;
 import com.github.guilhermebauer.studymanagement.model.CourseEntity;
 import com.github.guilhermebauer.studymanagement.model.LinkEntity;
+import com.github.guilhermebauer.studymanagement.model.RoleEntity;
 import com.github.guilhermebauer.studymanagement.model.StudyMaterialEntity;
+import com.github.guilhermebauer.studymanagement.model.UserEntity;
 import com.github.guilhermebauer.studymanagement.model.values.LinkVO;
 import com.github.guilhermebauer.studymanagement.model.values.StudyMaterialVO;
 import com.github.guilhermebauer.studymanagement.repository.StudyMaterialRepository;
@@ -25,8 +27,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -87,13 +91,19 @@ class StudyMaterialTest {
     private final String COURSE_TITLE = "Math";
     private final String COURSE_DESCRIPTION = "Math is a discipline that work with numbers";
 
+    private static final String USER_NAME = "john";
+    private static final String EMAIL = "jonhDoe@gmail.com";
+    private static final String PASSWORD = "123456";
+    private static final String USER_ROLE = "ROLE_USER";
+    private static final Set<RoleEntity> ROLES = new HashSet<>(Set.of(new RoleEntity(ID, USER_ROLE)));
+
 
     @BeforeEach
     void setUp() {
-
+        UserEntity userEntity = new UserEntity(ID, USER_NAME, EMAIL, PASSWORD, ROLES);
         linkVO = new LinkVO(ID, URL, DESCRIPTION);
         linkEntity = new LinkEntity(ID, URL, DESCRIPTION);
-        courseEntity = new CourseEntity(ID, COURSE_TITLE, COURSE_DESCRIPTION);
+        courseEntity = new CourseEntity(ID, COURSE_TITLE, COURSE_DESCRIPTION,userEntity);
         studyMaterialVO = new StudyMaterialVO(ID, TITLE, CONTENT, courseEntity, List.of(linkEntity));
         studyMaterialEntity = new StudyMaterialEntity(ID, TITLE, CONTENT, courseEntity, List.of(linkEntity));
         singleLinkToStudyMaterialRequest = new SingleLinkToStudyMaterialRequest(ID, linkVO);

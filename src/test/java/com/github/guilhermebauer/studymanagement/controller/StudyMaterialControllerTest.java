@@ -90,12 +90,15 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
 
+        UserEntity userEntity = new UserEntity(ID, USER_NAME, EMAIL, passwordEncoder.encode(PASSWORD), ROLES);
+        userEntity = userRepository.save(userEntity);
+
         LinkEntity linkEntity = new LinkEntity(ID, URL, DESCRIPTION);
         linkRepository.save(linkEntity);
 
         LinkVO linkVO = new LinkVO(ID, URL, DESCRIPTION);
 
-        CourseEntity courseEntity = new CourseEntity(ID, COURSE_TITLE, COURSE_DESCRIPTION);
+        CourseEntity courseEntity = new CourseEntity(ID, COURSE_TITLE, COURSE_DESCRIPTION,userEntity);
         courseRepository.save(courseEntity);
 
         studyMaterialVO = new StudyMaterialVO(ID, TITLE, CONTENT, courseEntity, List.of(linkEntity));
@@ -107,8 +110,7 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
 
         studyMaterialRepository.save(studyMaterialEntity);
 
-        UserEntity userEntity = new UserEntity(ID, USER_NAME, EMAIL, passwordEncoder.encode(PASSWORD), ROLES);
-        userEntity = userRepository.save(userEntity);
+
 
 
     }

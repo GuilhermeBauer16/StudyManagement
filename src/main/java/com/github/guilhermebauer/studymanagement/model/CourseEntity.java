@@ -2,6 +2,8 @@ package com.github.guilhermebauer.studymanagement.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -12,14 +14,18 @@ public class CourseEntity {
     private String id;
     private String title;
     private String description;
+    @ManyToOne
+    @JoinColumn(name= "user_id")
+    private UserEntity userEntity;
 
     public CourseEntity() {
     }
 
-    public CourseEntity(String id, String title, String description) {
+    public CourseEntity(String id, String title, String description, UserEntity userEntity) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.userEntity = userEntity;
     }
 
     public String getId() {
@@ -44,5 +50,13 @@ public class CourseEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 }
