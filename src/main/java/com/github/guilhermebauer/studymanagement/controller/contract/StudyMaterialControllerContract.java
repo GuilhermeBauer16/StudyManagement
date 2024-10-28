@@ -7,6 +7,7 @@ import com.github.guilhermebauer.studymanagement.model.values.StudyMaterialVO;
 import com.github.guilhermebauer.studymanagement.request.LinkListToStudyMaterialRequest;
 import com.github.guilhermebauer.studymanagement.request.SingleLinkToStudyMaterialRequest;
 import com.github.guilhermebauer.studymanagement.request.StudyMaterialUpdateRequest;
+import com.github.guilhermebauer.studymanagement.response.StudyMaterialResponse;
 import com.github.guilhermebauer.studymanagement.response.StudyMaterialUpdateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,7 +37,7 @@ public interface StudyMaterialControllerContract {
      * Creates a new study material in the system.
      *
      * @param studyMaterialVO the {@link StudyMaterialVO} object containing the details of the study material to be created.
-     * @return a {@link ResponseEntity} containing the created {@link StudyMaterialVO} object.
+     * @return a {@link ResponseEntity} containing the created {@link StudyMaterialResponse} object.
      * @see StudyMaterialVO
      * @see CourseEntity
      * @see LinkEntity
@@ -54,7 +55,7 @@ public interface StudyMaterialControllerContract {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content)
     })
-    ResponseEntity<StudyMaterialVO> create(@RequestBody StudyMaterialVO studyMaterialVO);
+    ResponseEntity<StudyMaterialResponse> create(@RequestBody StudyMaterialVO studyMaterialVO);
 
     /**
      * Updates an existing study material in the system.
@@ -85,7 +86,7 @@ public interface StudyMaterialControllerContract {
      * Finds a study material by its ID.
      *
      * @param id the ID of the study material to be found.
-     * @return a {@link ResponseEntity} containing the {@link StudyMaterialVO} object with the specified ID.
+     * @return a {@link ResponseEntity} containing the {@link StudyMaterialResponse} object with the specified ID.
      * @see StudyMaterialVO
      * @see LinkEntity
      * @see CourseEntity
@@ -103,13 +104,13 @@ public interface StudyMaterialControllerContract {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content)
     })
-    ResponseEntity<StudyMaterialVO> findById(@PathVariable(value = "id") String id);
+    ResponseEntity<StudyMaterialResponse> findById(@PathVariable(value = "id") String id);
 
     /**
      * Finds all study materials in the system with pagination.
      *
      * @param pageable the pagination information for the results.
-     * @return a {@link ResponseEntity} containing a {@link Page} of {@link StudyMaterialVO} objects.
+     * @return a {@link ResponseEntity} containing a {@link Page} of {@link StudyMaterialResponse} objects.
      * @see Pageable
      * @see StudyMaterialVO
      * @see LinkEntity
@@ -123,7 +124,7 @@ public interface StudyMaterialControllerContract {
             @ApiResponse(responseCode = "200", description = "Successful operation")
     })
 
-    ResponseEntity<Page<StudyMaterialVO>> findAll(@PageableDefault(size = 5) Pageable pageable);
+    ResponseEntity<Page<StudyMaterialResponse>> findAll(@PageableDefault(size = 5) Pageable pageable);
 
     /**
      * Deletes a study material by its ID.
@@ -152,7 +153,7 @@ public interface StudyMaterialControllerContract {
      * Adds a list of links to a study material.
      *
      * @param request the {@link LinkListToStudyMaterialRequest} object containing the list of links to be added.
-     * @return a {@link ResponseEntity} containing the updated {@link StudyMaterialVO} object with the added links.
+     * @return a {@link ResponseEntity} containing the updated {@link StudyMaterialResponse} object with the added links.
      * @see LinkListToStudyMaterialRequest
      * @see StudyMaterialVO
      * @see LinkEntity
@@ -172,13 +173,13 @@ public interface StudyMaterialControllerContract {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content)
     })
-    ResponseEntity<StudyMaterialVO> addLinkInStudyMaterial(@RequestBody LinkListToStudyMaterialRequest request);
+    ResponseEntity<StudyMaterialResponse> addLinkInStudyMaterial(@RequestBody LinkListToStudyMaterialRequest request);
 
     /**
      * Updates a single link in a study material.
      *
      * @param request the {@link SingleLinkToStudyMaterialRequest} object containing the link details to be updated.
-     * @return a {@link ResponseEntity} containing the updated {@link StudyMaterialVO} object with the updated link.
+     * @return a {@link ResponseEntity} containing the updated {@link StudyMaterialResponse} object with the updated link.
      * @see SingleLinkToStudyMaterialRequest
      * @see StudyMaterialVO
      * @see LinkEntity
@@ -197,7 +198,7 @@ public interface StudyMaterialControllerContract {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content)
     })
-    ResponseEntity<StudyMaterialVO> updateLinkInStudyMaterial(@RequestBody SingleLinkToStudyMaterialRequest request);
+    ResponseEntity<StudyMaterialResponse> updateLinkInStudyMaterial(@RequestBody SingleLinkToStudyMaterialRequest request);
 
     /**
      * Finds all links associated with a study material.

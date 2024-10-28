@@ -3,6 +3,7 @@ package com.github.guilhermebauer.studymanagement.factory;
 import com.github.guilhermebauer.studymanagement.model.CourseEntity;
 import com.github.guilhermebauer.studymanagement.model.LinkEntity;
 import com.github.guilhermebauer.studymanagement.model.StudyMaterialEntity;
+import com.github.guilhermebauer.studymanagement.model.UserEntity;
 import com.github.guilhermebauer.studymanagement.utils.UuidUtils;
 
 import java.util.List;
@@ -13,8 +14,8 @@ public class StudyMaterialFactory {
     }
 
     public static StudyMaterialEntity create(String title, String content,
-                                             CourseEntity courseEntity, List<LinkEntity> links){
-        return new StudyMaterialEntity(UuidUtils.generateUuid(),title,content,courseEntity, links);
+                                             CourseEntity courseEntity, List<LinkEntity> links, UserEntity userEntity) {
+        return new StudyMaterialEntity(UuidUtils.generateUuid(),title,content,courseEntity, links,userEntity);
     }
 
 }

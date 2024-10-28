@@ -2,6 +2,10 @@ package com.github.guilhermebauer.studymanagement.model.values;
 
 import com.github.guilhermebauer.studymanagement.model.CourseEntity;
 import com.github.guilhermebauer.studymanagement.model.LinkEntity;
+import com.github.guilhermebauer.studymanagement.model.UserEntity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
 import java.util.List;
 
 public class StudyMaterialVO {
@@ -11,19 +15,20 @@ public class StudyMaterialVO {
     private String content;
     private CourseEntity courseEntity;
     private List<LinkEntity> links;
+    private UserEntity userEntity;
 
     public StudyMaterialVO() {
     }
 
 
-    public StudyMaterialVO(String id, String title, String content, CourseEntity courseEntity, List<LinkEntity> links) {
+    public StudyMaterialVO(String id, String title, String content, CourseEntity courseEntity, List<LinkEntity> links, UserEntity userEntity) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.courseEntity = courseEntity;
         this.links = links;
+        this.userEntity = userEntity;
     }
-
 
     public String getId() {
         return id;
@@ -63,5 +68,13 @@ public class StudyMaterialVO {
 
     public void setLinks(List<LinkEntity> links) {
         this.links = links;
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 }
