@@ -69,9 +69,11 @@ class CourseControllerTest extends AbstractionIntegrationTest {
         objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-        courseVO = new CourseVO(ID, TITLE, DESCRIPTION);
         UserEntity userEntity = new UserEntity(ID, USER_NAME, EMAIL, passwordEncoder.encode(PASSWORD), ROLES);
         userRepository.save(userEntity);
+
+        courseVO = new CourseVO(ID, TITLE, DESCRIPTION,userEntity);
+
     }
 
     @Test

@@ -33,19 +33,22 @@ public class StudyMaterialEntity {
     )
     private List<LinkEntity> links;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
+
     public StudyMaterialEntity() {
     }
 
 
-    public StudyMaterialEntity(String id, String title, String content, CourseEntity courseEntity, List<LinkEntity> links) {
+    public StudyMaterialEntity(String id, String title, String content, CourseEntity courseEntity, List<LinkEntity> links, UserEntity userEntity) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.courseEntity = courseEntity;
         this.links = links;
+        this.userEntity = userEntity;
     }
-
-
 
     public String getId() {
         return id;
@@ -85,5 +88,13 @@ public class StudyMaterialEntity {
 
     public void setLinks(List<LinkEntity> links) {
         this.links = links;
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 }

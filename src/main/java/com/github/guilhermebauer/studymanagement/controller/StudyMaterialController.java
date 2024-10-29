@@ -6,6 +6,7 @@ import com.github.guilhermebauer.studymanagement.model.values.StudyMaterialVO;
 import com.github.guilhermebauer.studymanagement.request.LinkListToStudyMaterialRequest;
 import com.github.guilhermebauer.studymanagement.request.SingleLinkToStudyMaterialRequest;
 import com.github.guilhermebauer.studymanagement.request.StudyMaterialUpdateRequest;
+import com.github.guilhermebauer.studymanagement.response.StudyMaterialResponse;
 import com.github.guilhermebauer.studymanagement.response.StudyMaterialUpdateResponse;
 import com.github.guilhermebauer.studymanagement.service.StudyMaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,8 @@ public class StudyMaterialController implements StudyMaterialControllerContract 
     }
 
     @Override
-    public ResponseEntity<StudyMaterialVO> create(StudyMaterialVO studyMaterialVO) {
-        StudyMaterialVO createdStudyMaterialVO = service.create(studyMaterialVO);
+    public ResponseEntity<StudyMaterialResponse> create(StudyMaterialVO studyMaterialVO) {
+        StudyMaterialResponse createdStudyMaterialVO = service.create(studyMaterialVO);
         return new ResponseEntity<>(createdStudyMaterialVO, HttpStatus.CREATED);
 
     }
@@ -41,14 +42,14 @@ public class StudyMaterialController implements StudyMaterialControllerContract 
     }
 
     @Override
-    public ResponseEntity<StudyMaterialVO> findById(String id) {
-        StudyMaterialVO studyMaterialByID = service.findByID(id);
+    public ResponseEntity<StudyMaterialResponse> findById(String id) {
+        StudyMaterialResponse studyMaterialByID = service.findByID(id);
         return ResponseEntity.ok(studyMaterialByID);
     }
 
     @Override
-    public ResponseEntity<Page<StudyMaterialVO>> findAll(Pageable pageable) {
-        Page<StudyMaterialVO> allStudyMaterials = service.findAll(pageable);
+    public ResponseEntity<Page<StudyMaterialResponse>> findAll(Pageable pageable) {
+        Page<StudyMaterialResponse> allStudyMaterials = service.findAll(pageable);
         return ResponseEntity.ok(allStudyMaterials);
     }
 
@@ -62,14 +63,14 @@ public class StudyMaterialController implements StudyMaterialControllerContract 
     }
 
     @Override
-    public ResponseEntity<StudyMaterialVO> addLinkInStudyMaterial(LinkListToStudyMaterialRequest request) {
-        StudyMaterialVO studyMaterialVO = service.addLinkInStudyMaterial(request);
+    public ResponseEntity<StudyMaterialResponse> addLinkInStudyMaterial(LinkListToStudyMaterialRequest request) {
+        StudyMaterialResponse studyMaterialVO = service.addLinkInStudyMaterial(request);
         return new ResponseEntity<>(studyMaterialVO, HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<StudyMaterialVO> updateLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request){
-        StudyMaterialVO updatedLink = service.updateLinkInStudyMaterial(request);
+    public ResponseEntity<StudyMaterialResponse> updateLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request){
+        StudyMaterialResponse updatedLink = service.updateLinkInStudyMaterial(request);
         return ResponseEntity.ok(updatedLink);
     }
 
