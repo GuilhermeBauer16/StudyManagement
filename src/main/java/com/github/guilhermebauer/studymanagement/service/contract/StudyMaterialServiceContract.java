@@ -5,6 +5,7 @@ import com.github.guilhermebauer.studymanagement.model.values.StudyMaterialVO;
 import com.github.guilhermebauer.studymanagement.request.LinkListToStudyMaterialRequest;
 import com.github.guilhermebauer.studymanagement.request.SingleLinkToStudyMaterialRequest;
 import com.github.guilhermebauer.studymanagement.request.StudyMaterialUpdateRequest;
+import com.github.guilhermebauer.studymanagement.response.StudyMaterialResponse;
 import com.github.guilhermebauer.studymanagement.response.StudyMaterialUpdateResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -21,10 +22,10 @@ public interface StudyMaterialServiceContract {
      * Creates a new study material.
      *
      * @param studyMaterialVO the {@link StudyMaterialVO} object containing the details of the study material to be created.
-     * @return the created {@link StudyMaterialVO} object.
+     * @return the created {@link StudyMaterialResponse} object.
      * @see StudyMaterialVO
      */
-    StudyMaterialVO create(StudyMaterialVO studyMaterialVO);
+    StudyMaterialResponse create(StudyMaterialVO studyMaterialVO);
 
     /**
      * Updates an existing study material.
@@ -40,20 +41,21 @@ public interface StudyMaterialServiceContract {
      * Finds a study material by its ID.
      *
      * @param id the ID of the study material to find.
-     * @return the {@link StudyMaterialVO} object with the specified ID.
+     * @return the {@link StudyMaterialResponse} object with the specified ID.
      * @see StudyMaterialVO
      */
-    StudyMaterialVO findByID(String id);
+    StudyMaterialResponse findByID(String id);
+
 
     /**
      * Finds all study materials with pagination.
      *
      * @param pageable the pagination information.
-     * @return a pageable list of {@link StudyMaterialVO} objects.
+     * @return a pageable list of {@link StudyMaterialResponse} objects.
      * @see Pageable
      * @see StudyMaterialVO
      */
-    Page<StudyMaterialVO> findAll(Pageable pageable);
+    Page<StudyMaterialResponse> findAll(Pageable pageable);
 
     /**
      * Deletes a study material by its ID.
@@ -66,25 +68,25 @@ public interface StudyMaterialServiceContract {
      * Adds a list of links to a study material.
      *
      * @param request the {@link LinkListToStudyMaterialRequest} object containing the list of links to be added.
-     * @return the updated {@link StudyMaterialVO} object with the added links.
+     * @return the updated {@link StudyMaterialResponse} object with the added links.
      * @see LinkListToStudyMaterialRequest
      * @see StudyMaterialVO
      * @see LinkVO
      * @see LinkEntity
      */
-    StudyMaterialVO addLinkInStudyMaterial(LinkListToStudyMaterialRequest request);
+    StudyMaterialResponse addLinkInStudyMaterial(LinkListToStudyMaterialRequest request);
 
     /**
      * Updates a single link in a study material.
      *
      * @param request the {@link SingleLinkToStudyMaterialRequest} object containing the link details to be updated.
-     * @return the updated {@link StudyMaterialVO} object with the updated link.
+     * @return the updated {@link StudyMaterialResponse} object with the updated link.
      * @see SingleLinkToStudyMaterialRequest
      * @see StudyMaterialVO
      * @see LinkVO
      * @see LinkEntity
      */
-    StudyMaterialVO updateLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request);
+    StudyMaterialResponse updateLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request);
 
     /**
      * Deletes a single link from a study material.

@@ -22,6 +22,7 @@ import com.github.guilhermebauer.studymanagement.request.LoginRequest;
 import com.github.guilhermebauer.studymanagement.request.SingleLinkToStudyMaterialRequest;
 import com.github.guilhermebauer.studymanagement.request.StudyMaterialUpdateRequest;
 import com.github.guilhermebauer.studymanagement.response.LoginResponse;
+import com.github.guilhermebauer.studymanagement.response.StudyMaterialResponse;
 import com.github.guilhermebauer.studymanagement.response.StudyMaterialUpdateResponse;
 import com.github.guilhermebauer.studymanagement.testContainers.AbstractionIntegrationTest;
 import com.github.guilhermebauer.studymanagement.utils.PaginatedResponse;
@@ -101,9 +102,9 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
         CourseEntity courseEntity = new CourseEntity(ID, COURSE_TITLE, COURSE_DESCRIPTION,userEntity);
         courseRepository.save(courseEntity);
 
-        studyMaterialVO = new StudyMaterialVO(ID, TITLE, CONTENT, courseEntity, List.of(linkEntity));
+        studyMaterialVO = new StudyMaterialVO(ID, TITLE, CONTENT, courseEntity, List.of(linkEntity),userEntity);
         StudyMaterialEntity studyMaterialEntity
-                = new StudyMaterialEntity(ID, TITLE, CONTENT, courseEntity, List.of(linkEntity));
+                = new StudyMaterialEntity(ID, TITLE, CONTENT, courseEntity, List.of(linkEntity),userEntity);
         singleLinkToStudyMaterialRequest = new SingleLinkToStudyMaterialRequest(ID, linkVO);
         linkListToStudyMaterialRequest = new LinkListToStudyMaterialRequest(ID, List.of(linkEntity));
         studyMaterialUpdateRequest = new StudyMaterialUpdateRequest(ID, TITLE, CONTENT);
@@ -162,21 +163,21 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
                 .asString();
 
 
-        StudyMaterialVO studyMaterialVOResponse = objectMapper.readValue(content, StudyMaterialVO.class);
+        StudyMaterialResponse studyMaterialResponse = objectMapper.readValue(content, StudyMaterialResponse.class);
 
-        Assertions.assertNotNull(studyMaterialVOResponse);
-        Assertions.assertNotNull(studyMaterialVOResponse.getId());
-        assertTrue(studyMaterialVOResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
+        Assertions.assertNotNull(studyMaterialResponse);
+        Assertions.assertNotNull(studyMaterialResponse.getId());
+        assertTrue(studyMaterialResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
 
-        assertEquals(CONTENT, studyMaterialVOResponse.getContent());
-        assertEquals(TITLE, studyMaterialVOResponse.getTitle());
-        assertEquals(COURSE_TITLE, studyMaterialVOResponse.getCourseEntity().getTitle());
-        assertEquals(COURSE_DESCRIPTION, studyMaterialVOResponse.getCourseEntity().getDescription());
-        assertEquals(URL, studyMaterialVOResponse.getLinks().getFirst().getUrl());
-        assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
+        assertEquals(CONTENT, studyMaterialResponse.getContent());
+        assertEquals(TITLE, studyMaterialResponse.getTitle());
+        assertEquals(COURSE_TITLE, studyMaterialResponse.getCourseResponse().getTitle());
+        assertEquals(COURSE_DESCRIPTION, studyMaterialResponse.getCourseResponse().getDescription());
+        assertEquals(URL, studyMaterialResponse.getLinks().getFirst().getUrl());
+        assertEquals(DESCRIPTION, studyMaterialResponse.getLinks().getFirst().getDescription());
 
 
-        studyMaterialVO.setId(studyMaterialVOResponse.getId());
+        studyMaterialVO.setId(studyMaterialResponse.getId());
 
     }
 
@@ -194,18 +195,19 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
                 .body()
                 .asString();
 
-        StudyMaterialVO studyMaterialVOResponse = objectMapper.readValue(content, StudyMaterialVO.class);
+        StudyMaterialResponse studyMaterialResponse = objectMapper.readValue(content, StudyMaterialResponse.class);
 
-        Assertions.assertNotNull(studyMaterialVOResponse);
-        Assertions.assertNotNull(studyMaterialVOResponse.getId());
-        assertTrue(studyMaterialVOResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
+        Assertions.assertNotNull(studyMaterialResponse);
+        Assertions.assertNotNull(studyMaterialResponse.getId());
+        assertTrue(studyMaterialResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
 
-        assertEquals(CONTENT, studyMaterialVOResponse.getContent());
-        assertEquals(TITLE, studyMaterialVOResponse.getTitle());
-        assertEquals(COURSE_TITLE, studyMaterialVOResponse.getCourseEntity().getTitle());
-        assertEquals(COURSE_DESCRIPTION, studyMaterialVOResponse.getCourseEntity().getDescription());
-        assertEquals(URL, studyMaterialVOResponse.getLinks().getFirst().getUrl());
-        assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
+        assertEquals(CONTENT, studyMaterialResponse.getContent());
+        assertEquals(TITLE, studyMaterialResponse.getTitle());
+        assertEquals(COURSE_TITLE, studyMaterialResponse.getCourseResponse().getTitle());
+        assertEquals(COURSE_DESCRIPTION, studyMaterialResponse.getCourseResponse().getDescription());
+        assertEquals(URL, studyMaterialResponse.getLinks().getFirst().getUrl());
+        assertEquals(DESCRIPTION, studyMaterialResponse.getLinks().getFirst().getDescription());
+
 
 
     }
@@ -223,23 +225,24 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
                 .body()
                 .asString();
 
-        PaginatedResponse<StudyMaterialVO> paginatedResponse =
+        PaginatedResponse<StudyMaterialResponse> paginatedResponse =
                 objectMapper.readValue(content, new TypeReference<>() {
                 });
 
-        List<StudyMaterialVO> studyMaterialVOList = paginatedResponse.getContent();
-        StudyMaterialVO studyMaterialVOResponse = studyMaterialVOList.getFirst();
+        List<StudyMaterialResponse> studyMaterialVOList = paginatedResponse.getContent();
+        StudyMaterialResponse studyMaterialResponse = studyMaterialVOList.getFirst();
 
-        Assertions.assertNotNull(studyMaterialVOResponse);
-        Assertions.assertNotNull(studyMaterialVOResponse.getId());
-        assertTrue(studyMaterialVOResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
 
-        assertEquals(CONTENT, studyMaterialVOResponse.getContent());
-        assertEquals(TITLE, studyMaterialVOResponse.getTitle());
-        assertEquals(COURSE_TITLE, studyMaterialVOResponse.getCourseEntity().getTitle());
-        assertEquals(COURSE_DESCRIPTION, studyMaterialVOResponse.getCourseEntity().getDescription());
-        assertEquals(URL, studyMaterialVOResponse.getLinks().getFirst().getUrl());
-        assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
+        Assertions.assertNotNull(studyMaterialResponse);
+        Assertions.assertNotNull(studyMaterialResponse.getId());
+        assertTrue(studyMaterialResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
+
+        assertEquals(CONTENT, studyMaterialResponse.getContent());
+        assertEquals(TITLE, studyMaterialResponse.getTitle());
+        assertEquals(COURSE_TITLE, studyMaterialResponse.getCourseResponse().getTitle());
+        assertEquals(COURSE_DESCRIPTION, studyMaterialResponse.getCourseResponse().getDescription());
+        assertEquals(URL, studyMaterialResponse.getLinks().getFirst().getUrl());
+        assertEquals(DESCRIPTION, studyMaterialResponse.getLinks().getFirst().getDescription());
 
 
     }
@@ -262,18 +265,18 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
                 .asString();
 
 
-        StudyMaterialVO studyMaterialVOResponse = objectMapper.readValue(content, StudyMaterialVO.class);
+        StudyMaterialResponse studyMaterialResponse = objectMapper.readValue(content, StudyMaterialResponse.class);
 
-        Assertions.assertNotNull(studyMaterialVOResponse);
-        Assertions.assertNotNull(studyMaterialVOResponse.getId());
-        assertTrue(studyMaterialVOResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
+        Assertions.assertNotNull(studyMaterialResponse);
+        Assertions.assertNotNull(studyMaterialResponse.getId());
+        assertTrue(studyMaterialResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
 
-        assertEquals(CONTENT, studyMaterialVOResponse.getContent());
-        assertEquals(TITLE, studyMaterialVOResponse.getTitle());
-        assertEquals(COURSE_TITLE, studyMaterialVOResponse.getCourseEntity().getTitle());
-        assertEquals(COURSE_DESCRIPTION, studyMaterialVOResponse.getCourseEntity().getDescription());
-        assertEquals(URL, studyMaterialVOResponse.getLinks().getFirst().getUrl());
-        assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
+        assertEquals(CONTENT, studyMaterialResponse.getContent());
+        assertEquals(TITLE, studyMaterialResponse.getTitle());
+        assertEquals(COURSE_TITLE, studyMaterialResponse.getCourseResponse().getTitle());
+        assertEquals(COURSE_DESCRIPTION, studyMaterialResponse.getCourseResponse().getDescription());
+        assertEquals(URL, studyMaterialResponse.getLinks().getFirst().getUrl());
+        assertEquals(DESCRIPTION, studyMaterialResponse.getLinks().getFirst().getDescription());
 
     }
 
@@ -325,18 +328,18 @@ class StudyMaterialControllerTest extends AbstractionIntegrationTest {
                 .asString();
 
 
-        StudyMaterialVO studyMaterialVOResponse = objectMapper.readValue(content, StudyMaterialVO.class);
+        StudyMaterialResponse studyMaterialResponse = objectMapper.readValue(content, StudyMaterialResponse.class);
 
-        Assertions.assertNotNull(studyMaterialVOResponse);
-        Assertions.assertNotNull(studyMaterialVOResponse.getId());
-        assertTrue(studyMaterialVOResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
+        Assertions.assertNotNull(studyMaterialResponse);
+        Assertions.assertNotNull(studyMaterialResponse.getId());
+        assertTrue(studyMaterialResponse.getId().matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"));
 
-        assertEquals(CONTENT, studyMaterialVOResponse.getContent());
-        assertEquals(TITLE, studyMaterialVOResponse.getTitle());
-        assertEquals(COURSE_TITLE, studyMaterialVOResponse.getCourseEntity().getTitle());
-        assertEquals(COURSE_DESCRIPTION, studyMaterialVOResponse.getCourseEntity().getDescription());
-        assertEquals(URL, studyMaterialVOResponse.getLinks().getFirst().getUrl());
-        assertEquals(DESCRIPTION, studyMaterialVOResponse.getLinks().getFirst().getDescription());
+        assertEquals(CONTENT, studyMaterialResponse.getContent());
+        assertEquals(TITLE, studyMaterialResponse.getTitle());
+        assertEquals(COURSE_TITLE, studyMaterialResponse.getCourseResponse().getTitle());
+        assertEquals(COURSE_DESCRIPTION, studyMaterialResponse.getCourseResponse().getDescription());
+        assertEquals(URL, studyMaterialResponse.getLinks().getFirst().getUrl());
+        assertEquals(DESCRIPTION, studyMaterialResponse.getLinks().getFirst().getDescription());
 
     }
 

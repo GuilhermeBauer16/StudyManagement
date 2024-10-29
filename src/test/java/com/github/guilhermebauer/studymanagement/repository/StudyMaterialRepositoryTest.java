@@ -73,7 +73,7 @@ class StudyMaterialRepositoryTest extends AbstractionIntegrationTest {
         courseRepository.save(courseEntity);
 
 
-        studyMaterialEntity = new StudyMaterialEntity(ID, TITLE, CONTENT, courseEntity, List.of(linkEntity));
+        studyMaterialEntity = new StudyMaterialEntity(ID, TITLE, CONTENT, courseEntity, List.of(linkEntity),userEntity);
 
         studyMaterialEntity = studyMaterialRepository.save(studyMaterialEntity);
     }
