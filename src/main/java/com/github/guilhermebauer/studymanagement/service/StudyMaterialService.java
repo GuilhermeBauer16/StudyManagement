@@ -133,7 +133,7 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
     @Override
     public StudyMaterialResponse addLinkInStudyMaterial(LinkListToStudyMaterialRequest request) {
 
-        StudyMaterialEntity studyMaterialEntity = repository.findByIdAndUserEmail(request.getId(), retrieveUserEmail())
+        StudyMaterialEntity studyMaterialEntity = repository.findById(request.getId())
                 .orElseThrow(() -> new StudyMaterialNotFoundException(STUDY_MATERIAL_NOT_FOUND));
 
         List<LinkEntity> links = new ArrayList<>(studyMaterialEntity.getLinks());
@@ -150,7 +150,7 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
     @Transactional
     public StudyMaterialResponse updateLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) {
 
-        StudyMaterialEntity studyMaterialEntity = repository.findByIdAndUserEmail(request.getId(), retrieveUserEmail())
+        StudyMaterialEntity studyMaterialEntity = repository.findById(request.getId())
                 .orElseThrow(() -> new StudyMaterialNotFoundException(STUDY_MATERIAL_NOT_FOUND));
 
         List<LinkEntity> links = studyMaterialEntity.getLinks();
@@ -171,7 +171,7 @@ public class StudyMaterialService implements StudyMaterialServiceContract {
     @Transactional
     public void deleteLinkInStudyMaterial(SingleLinkToStudyMaterialRequest request) {
 
-        StudyMaterialEntity studyMaterialEntity = repository.findByIdAndUserEmail(request.getId(), retrieveUserEmail())
+        StudyMaterialEntity studyMaterialEntity = repository.findById(request.getId())
                 .orElseThrow(() -> new StudyMaterialNotFoundException(STUDY_MATERIAL_NOT_FOUND));
 
         List<LinkEntity> mutableLinks = new ArrayList<>(studyMaterialEntity.getLinks());
