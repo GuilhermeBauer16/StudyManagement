@@ -24,6 +24,29 @@ tokens to structure a login system with more security with the implementation of
 I implemented pipelines using GitHub actions in the project to deploy in Docker Hub when the main branch receives a pull request. Another pipeline 
 I implemented only permitted pull requests to the main branch when sent by the develop branch. Implement the Sonar Cloud to control the code quality.
 
+## Functionalities
+
+### User 
+* **Login** with Spring Security authentication.
+* ```dotlogin
+   {
+    "email": "jonhBee10@gmail.com",
+    "password": "123456"}
+    ```
+
+* Creation of User
+* ```dotuser
+      {
+    "name": "john",
+    "email": "jonhBee10@gmail.com",
+    "password": "123456",
+    "roles": [
+        {
+            "name": "user"
+        }
+    ]}
+    ```
+
 ## Docker 
 
 * You can pull the Docker image using this command:
