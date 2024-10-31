@@ -30,7 +30,7 @@ I implemented only permitted pull requests to the main branch when sent by the d
 * **Login** with Spring Security authentication.
 * ```dotlogin
    {
-    "email": "jonhBee10@gmail.com",
+    "email": "jonhBee10@gmail.com", // Ensure that this email is already registered
     "password": "123456"}
     ```
 
@@ -46,6 +46,77 @@ I implemented only permitted pull requests to the main branch when sent by the d
         }
     ]}
     ```
+
+### Course
+
+* Addition of course with details:   
+* ```dotworkout
+  {
+  "title": "biologia moderna",
+  "description": "A Math"
+  }
+    ```
+ 
+* Updating of course.     
+  
+* Deletion of course.
+
+* Viewing registered course.
+  
+* Viewing registered course find by title.
+
+### Study Material
+
+* Addition of Study Material with details:   
+* ```dotworkout
+  {
+  "title": "Introduction to Spring Boot",
+  "content": "This is a comprehensive guide to Spring Boot.",
+  "courseEntity": {
+    "id": "9e0c1e7f-8907-441c-9417-50c4c9cbfa70" // Ensure that this ID is already registered
+
+  },
+  "links": [
+    {
+      "url": "http://example.com/spring-boot-tutorial",
+      "description": "Spring Boot Tutorial"
+    },
+    {
+      "url": "http://example.com/spring-boot-docs",
+      "description": "Spring Boot Documentation"
+    }
+  ]}
+    ```
+ 
+* Updating of Study Material.     
+  
+* Deletion of Study Material.
+
+* Viewing registered Study Material.
+
+* Add link In a StudyMaterial, with the details:
+* ```dotworkout
+  {
+    "id": "a2dc16f6-0af5-4384-9877-ed1ae968a2f0",  // Ensure that this ID is already registered
+            
+    "links": [
+        {
+            "url": "http://example.com/spring-boot-docs",
+            "description": "Spring Boot Documentation"
+        },
+        {
+            "url": "http://example.com/spring-boot-tutorial",
+            "description": "Spring Boot Tutorial"
+        }
+    ]}
+    ```
+
+
+* Update link In a StudyMaterial.
+* Find link In a StudyMaterial by ID.
+* Delete link In a StudyMaterial.
+
+  
 
 ## Docker 
 
