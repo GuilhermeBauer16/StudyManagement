@@ -1,5 +1,11 @@
 # Study Management
 
+[![CI-Pull-Request](https://github.com/GuilhermeBauer16/StudyManagement/actions/workflows/CI-Pull-Request.yml/badge.svg)](https://github.com/GuilhermeBauer16/StudyManagement/actions/workflows/CI-Pull-Request.yml)
+[![Deploy in Docker Hub](https://github.com/GuilhermeBauer16/StudyManagement/actions/workflows/Deploy-in-DockerHub.yml/badge.svg)](https://github.com/GuilhermeBauer16/StudyManagement/actions/workflows/Deploy-in-DockerHub.yml)
+[![SonarCloud](https://github.com/GuilhermeBauer16/StudyManagement/actions/workflows/sonar-cloud.yml/badge.svg)](https://github.com/GuilhermeBauer16/StudyManagement/actions/workflows/sonar-cloud.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=GuilhermeBauer16_StudyManagement&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=GuilhermeBauer16_StudyManagement)
+
+
 ## Objective  
 The application allows user to create their study material with a title and description. The user can personalize 
 the study material by adding some links to reference the topic he is studying. 
