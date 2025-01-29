@@ -1,4 +1,4 @@
-# Study Management
+# Study Management     
 
 [![CI-Pull-Request](https://github.com/GuilhermeBauer16/StudyManagement/actions/workflows/CI-Pull-Request.yml/badge.svg)](https://github.com/GuilhermeBauer16/StudyManagement/actions/workflows/CI-Pull-Request.yml)
 [![Deploy in Docker Hub](https://github.com/GuilhermeBauer16/StudyManagement/actions/workflows/Deploy-in-DockerHub.yml/badge.svg)](https://github.com/GuilhermeBauer16/StudyManagement/actions/workflows/Deploy-in-DockerHub.yml)
